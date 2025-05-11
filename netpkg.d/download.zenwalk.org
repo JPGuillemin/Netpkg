@@ -1,0 +1,2 @@
+URL = http://download.zenwalk.org/x86_64/current/zenwalk
+Black_list = 

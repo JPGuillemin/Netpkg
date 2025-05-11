@@ -1,0 +1,364 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Netpkg 4.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: 2008-08-30 06:15+0200\n"
+"Last-Translator: gt <vlahavas@gmail.com>\n"
+"Language-Team: Zenwalk.org <zenwalk-vip@lists.zenwalk.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr ""
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr ""
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr "Εγκατάσταση"
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr ""
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr "Επανεγκατάσταση"
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr ""
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr ""
+
+# (μαύρη λίστα
+#~ msgid "(blacklisted)"
+#~ msgstr "(μαύρη λίστα)"
+
+#~ msgid ".new files activation"
+#~ msgstr "Ενεργοποίηση νέων αρχείων .new "
+
+#~ msgid "Accept .new config files"
+#~ msgstr "Αποδοχή νέων αρχείων ρυθμίσεων .new"
+
+#~ msgid "Available packages:"
+#~ msgstr "Διαθέσιμα πακέτα:"
+
+#~ msgid "Available version:"
+#~ msgstr "Διαθέσιμη έκδοση:"
+
+#~ msgid "Clean cache"
+#~ msgstr "Καθαρισμός τοπικής αποθήκης πακέτων"
+
+#~ msgid "Clean the local packages cache !"
+#~ msgstr "Καθαρισμός της τοπικής αποθήκης πακέτων !"
+
+#~ msgid "Click here to exit Netpkg!"
+#~ msgstr "Πατήστε εδώ για έξοδο από το Netpkg!"
+
+#~ msgid "Console Applications"
+#~ msgstr "Εφαρμογές Κονσόλας"
+
+#~ msgid "Creating local packages database"
+#~ msgstr "Δημιουργία βάσης δεδομένων τοπικών πακέτων"
+
+#~ msgid "Database loaded"
+#~ msgstr "Βάση Δεδομένων φορτώθηκε"
+
+#~ msgid "Description:"
+#~ msgstr "Περιγραφή"
+
+#~ msgid "Development libraries"
+#~ msgstr "Βιβλιοθήκες ανάπτυξης"
+
+#~ msgid "Done"
+#~ msgstr "Έτοιμο"
+
+#~ msgid "Downgrading"
+#~ msgstr "Υποβάθμιση"
+
+#~ msgid "Failed connecting to"
+#~ msgstr "Αποτυχία σύνδεσης σε"
+
+#~ msgid "Failed to download"
+#~ msgstr "Αποτυχία λήψης"
+
+#~ msgid "Failed to install:"
+#~ msgstr "Αποτυχία εγκατάστασης:"
+
+#~ msgid "Games"
+#~ msgstr "Παιχνίδια"
+
+#~ msgid "Gnome Desktop"
+#~ msgstr "Περιβάλλον Εργασίας Gnome"
+
+#~ msgid "Graphical Applications"
+#~ msgstr "Εφαρμογές Γραφικού Περιβάλλοντος"
+
+#~ msgid "Install packages"
+#~ msgstr "Εγκατέστησε τα πακέτα"
+
+#~ msgid "Install size:"
+#~ msgstr "Μέγεθος εγκατεστημένου πακέτου:"
+
+#~ msgid "Installed"
+#~ msgstr "Εγκατεστημένα"
+
+#~ msgid "Installed packages:"
+#~ msgstr "Εγκατεστημένα πακέτα:"
+
+#~ msgid "Installed version"
+#~ msgstr "Εγκατεστημένη έκδοση"
+
+#~ msgid "Installed version:"
+#~ msgstr "Εγκατεστημένη έκδοση:"
+
+#~ msgid "KDE Desktop"
+#~ msgstr "Περιβάλλον Εργασίας KDE"
+
+#~ msgid "Launch search"
+#~ msgstr "Πραγματοποίηση αναζήτησης"
+
+#~ msgid "Loading"
+#~ msgstr "Φορτώνεται"
+
+#~ msgid "Loading packages ..."
+#~ msgstr "Φορτώνονται πακέτα"
+
+#~ msgid "Localization"
+#~ msgstr "Εντοπιότητα"
+
+#~ msgid "Misc"
+#~ msgstr "Διάφορα"
+
+#~ msgid "Modified"
+#~ msgstr "Τροποποιημένα"
+
+#~ msgid "Netpkg is released under the terms of the Gnu Public Licence v2,"
+#~ msgstr "Το Netpkg παρέχεται με την άδεια χρήσης Gnu Public Licence v2,"
+
+#~ msgid "Network"
+#~ msgstr "Δίκτυο"
+
+#~ msgid "No .new config files yet"
+#~ msgstr "Δεν υπάρχουν νέα αρχεία .new"
+
+#~ msgid "Not installed"
+#~ msgstr "Μη εγκατεστημένα"
+
+#~ msgid "Package size:"
+#~ msgstr "Μέγεθος πακέτου:"
+
+#~ msgid "Processing packages ..."
+#~ msgstr "Προώθηση πακέτων ..."
+
+#~ msgid "Refreshing database"
+#~ msgstr "Ανανέωση βάσης δεδομένων"
+
+#~ msgid "Removing"
+#~ msgstr "Απεγκατάσταση"
+
+#~ msgid "Report"
+#~ msgstr "Αναφορά"
+
+#~ msgid "Runtime libraries"
+#~ msgstr "Βιβλιοθήκες συστήματος"
+
+#~ msgid "Search a pattern through packages descriptions"
+#~ msgstr "Αναζήτηση δείγματος ανάμεσα στις περιγραφές πακέτων"
+
+#~ msgid "Search for .new configuration files to be activated"
+#~ msgstr "Αναζήτηση νέων αρχείων ρυθμίσεων .new, έτοιμα προς ενεργοποίηση"
+
+#~ msgid "Select"
+#~ msgstr "Επιλέξτε"
+
+#~ msgid "Show all installed packages"
+#~ msgstr "Εμφάνιση όλων των εγκατεστημένων πακέτων"
+
+#~ msgid "Show installed packages that have either been updated or downgraded"
+#~ msgstr ""
+#~ "Εμφάνιση εγκατεστημένων πακέτων που είτε έχουν αναβαθμιστεί είτε "
+#~ "υποβαθμιστεί"
+
+#~ msgid "Skipping"
+#~ msgstr "Παράλειψη"
+
+#~ msgid "Successfully installed:"
+#~ msgstr "Εγκατεστημένα επιτυχώς"
+
+#~ msgid "System"
+#~ msgstr "Σύστημα"
+
+#~ msgid "Uninstall packages"
+#~ msgstr "Απεγκατάσταση πακέτων"
+
+#~ msgid "Uninstalled packages:"
+#~ msgstr "Απεγκατεστημένα πακέτα"
+
+#~ msgid "Updating"
+#~ msgstr "Αναβάθμιση"
+
+#~ msgid "Welcome to Netpkg !"
+#~ msgstr "Καλώς ήλθατε στο Netpkg !"
+
+#~ msgid "Xorg"
+#~ msgstr "Xorg"
+
+#~ msgid "You are about to remove all cached packages, are you sure ?"
+#~ msgstr ""
+#~ "Πρόκειται να αφαιρέσετε όλα τα πακέτα που βρίσκονται στην τοπική αποθήκη "
+#~ "πακέτων, είστε σίγουροι ;"
+
+#~ msgid "Activate the following config files"
+#~ msgstr "Ενεργοποίησε τα ακόλουθα αρχεία ρυθμίσεων"
+
+#~ msgid "Filters"
+#~ msgstr "Φίλτρα"
+
+#~ msgid "Install process result"
+#~ msgstr "Αποτέλεσμα διαδικασίας εγκατάστασης"
+
+#~ msgid "Really clean local cache ?"
+#~ msgstr "Θέλετε να σβηστεί η τοπική αποθήκη πακέτων ;"
+
+#~ msgid "Search"
+#~ msgstr "Αναζήτηση"
+
+#~ msgid "Uninstall process result"
+#~ msgstr "Αποτέλεσμα διαδικασίας απεγκατάστασης"
+
+#~ msgid "Building package tree"
+#~ msgstr "Δημιουργία δέντρου πακέτων"
+
+#~ msgid ""
+#~ "Database loaded from cache, please reload the mirror before installing "
+#~ "packages"
+#~ msgstr ""
+#~ "Η Βάση Δεδομένων φορτώθηκε από την τοπική αποθήκη πακέτων, παρακαλώ "
+#~ "ξαναφορτώστε την αποθήκη πακέτων προτού εγκαταστήσετε πακέτα"
+
+#~ msgid "Load or reload mirror content"
+#~ msgstr "Φόρτωση ή επαναφόρτωση περιεχομένων αποθήκης πακέτων"
+
+#~ msgid ""
+#~ "Show new packages, which are available on the mirror and not installed yet"
+#~ msgstr ""
+#~ "Εμφάνιση νέων πακέτων, τα οποία είναι διαθέσιμα στον καθρέφτη και δεν "
+#~ "έχουν εγκατασταθεί ακόμη"
+
+#~ msgid "No database loaded, please choose a mirror and load it"
+#~ msgstr ""
+#~ "Δεν φορτώθηκε βάση δεδομένων, παρακαλώ επιλέξτε αποθήκη πακέτων και "
+#~ "φορτώστε τον"
+
+#~ msgid "Available"
+#~ msgstr "Διαθέσιμα"
+
+#~ msgid "Include deps"
+#~ msgstr "Συμπεριλαμβανομένων των εξαρτήσεων"
+
+#~ msgid "Include orphan deps"
+#~ msgstr "Συμπεριλαμβανομένων των ορφανών εξαρτήσεων"
+
+#~ msgid ""
+#~ "Install button : Compute dependencies and then install/upgrade selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Κουμπί εγκατάστασης : Υπολογισμός εξαρτήσεων και εγκατάσταση/αναβάθμιση "
+#~ "των επιλεγμένων πακέτων"
+
+#~ msgid "Installed dependencies:"
+#~ msgstr "Εγκατεστημένες εξαρτήσεις:"
+
+#~ msgid "Installed packages that require"
+#~ msgstr "Εγκατεστημένα πακέτα που xρειάζονται το"
+
+#~ msgid "Missing or updated dependencies:"
+#~ msgstr "Απούσες ή αναβαθμισμένες εξαρτήσεις:"
+
+#~ msgid "Orphan dependencies:"
+#~ msgstr "Εξαρτήσεις Ορφανών:"
+
+#~ msgid ""
+#~ "Uninstall button : Compute dependencies and then uninstall selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Κουμπί απεγκατάστασης: Υπολογισμός εξαρτήσεων και απεγκατάσταση των "
+#~ "επιλεγμένων πακέτων"
+
+#~ msgid "not installed"
+#~ msgstr "μη εγκατεστημένα"
+
+#~ msgid "Orphans"
+#~ msgstr "Ορφανά"
+
+#~ msgid ""
+#~ "Show installed packages that are not required by any other installed "
+#~ "package"
+#~ msgstr ""
+#~ "Εμφάνιση όλων των εγκατεστημένων πακέτων που δεν απαιτούνται από κάποιο "
+#~ "άλλο πακέτο"
+
+#~ msgid "Connecting to mirror"
+#~ msgstr "Σύνδεση στον καθρέφτη"
+
+#~ msgid "Creating database"
+#~ msgstr "Δημιουργία Βάσης Δεδομένων"
+
+#~ msgid "mirror metadata"
+#~ msgstr "metadata αποθήκης πακέτων"
+
+#~ msgid ""
+#~ "Enter the URL to mirror or choose one from the history. Mirrors which "
+#~ "have been loaded properly will be auto-saved in the history"
+#~ msgstr ""
+#~ "Εισάγετε το URL της αποθήκης πακέτων ή επιλέξτε έναν από το ιστορικό. Οι "
+#~ "αποθήκες πακέτων που φορτώθηκαν κανονικά, αποθηκεύονται αυτόματα στο "
+#~ "ιστορικό"
+
+#~ msgid "Local"
+#~ msgstr "Τοπικά"
+
+#~ msgid "Location:"
+#~ msgstr "Τοποθεσία:"
+
+#~ msgid "Actions"
+#~ msgstr "Ενέργειες"
+
+#~ msgid "Selected packages:"
+#~ msgstr "Επιλεγμένα πακέτα:"
+
+#~ msgid "Category"
+#~ msgstr "Κατηγορία"
+
+#~ msgid "Available version"
+#~ msgstr "Διαθέσιμη έκδοση"
+
+#~ msgid "Information"
+#~ msgstr "Πληροφορίες"

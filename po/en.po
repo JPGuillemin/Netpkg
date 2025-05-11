@@ -1,0 +1,57 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Netpkg 4.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Hyperion <jp.guillemin@free.fr>\n"
+"Language-Team: Zenwalk.org <zenwalk-vip@lists.zenwalk.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr ""
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr ""
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr ""
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr ""
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr ""
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr ""
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr ""

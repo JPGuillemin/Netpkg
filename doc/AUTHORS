@@ -1,0 +1,13 @@
+
+Copyright Jean-Philippe Guillemin <jp.guillemin@free.fr> Nantes , France
+
+Netpkg is a tool for easily install or upgrade packages via the network. With Netpkg, 
+you can make a minimal installation of Zenwalk Linux and install/upgrade just the 
+packages you need most.
+
+See the COPYING file for terms of use and licencing information.
+
+Contributors :
+
+- Thibaut Guerin <guth@ploposor.com> : help for performance improvement in the C parser
+- Fred Broders <fred@f-r-e-d.org> : Netpkg logo

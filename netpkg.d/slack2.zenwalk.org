@@ -1,0 +1,2 @@
+URL = http://slack2.zenwalk.org/pub/slackware/slackware64-current
+Black_list = 

@@ -1,0 +1,360 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Netpkg 4.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: rener <rrutjes@netscape.net>\n"
+"Language-Team: Zenwalk.org <zenwalk-vip@lists.zenwalk.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr ""
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr ""
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr "Installatie van"
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr ""
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr "Herinstallatie van"
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr ""
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr ""
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr ""
+
+#~ msgid "(blacklisted)"
+#~ msgstr "(buitengesloten)"
+
+#~ msgid ".new files activation"
+#~ msgstr "Activering .new bestanden"
+
+#~ msgid "Accept .new config files"
+#~ msgstr "Accepteer .new configuratiebestanden"
+
+#~ msgid "Available packages:"
+#~ msgstr "Beschikbare pakketten:"
+
+#~ msgid "Available version:"
+#~ msgstr "Beschikbare versie:"
+
+#~ msgid "Clean cache"
+#~ msgstr "Tijdelijke opslag leegmaken"
+
+#~ msgid "Clean the local packages cache !"
+#~ msgstr "Maak de tijdelijke pakketopslag leeg !"
+
+#~ msgid "Click here to exit Netpkg!"
+#~ msgstr "Klik hier om Netpkg te verlaten!"
+
+#~ msgid "Console Applications"
+#~ msgstr "Console Applicaties"
+
+#~ msgid "Creating local packages database"
+#~ msgstr "Bezig met aanmaken van gegevensbank met lokale pakketten"
+
+#~ msgid "Database loaded"
+#~ msgstr "Gegevensbank geladen"
+
+#~ msgid "Description:"
+#~ msgstr "Beschrijving:"
+
+#~ msgid "Development libraries"
+#~ msgstr "Ontwikkelingsbibliotheken"
+
+#~ msgid "Done"
+#~ msgstr "Klaar"
+
+#~ msgid "Downgrading"
+#~ msgstr "Bijwerken naar oudere versie"
+
+#~ msgid "Failed connecting to"
+#~ msgstr "Kon geen verbinding maken naar"
+
+#~ msgid "Failed to download"
+#~ msgstr "Download is mislukt voor"
+
+#~ msgid "Failed to install:"
+#~ msgstr "Installatie is mislukt voor:"
+
+#~ msgid "Games"
+#~ msgstr "Spellen"
+
+#~ msgid "Gnome Desktop"
+#~ msgstr "Gnome Bureaublad"
+
+#~ msgid "Graphical Applications"
+#~ msgstr "Grafische Applicaties"
+
+#~ msgid "Install packages"
+#~ msgstr "Installeer pakketten"
+
+#~ msgid "Install size:"
+#~ msgstr "Grootte van de installatie:"
+
+#~ msgid "Installed"
+#~ msgstr "Geïnstalleerd"
+
+#~ msgid "Installed packages:"
+#~ msgstr "Geïnstalleerde pakketten:"
+
+#~ msgid "Installed version"
+#~ msgstr "Geïnstalleerde versie"
+
+#~ msgid "Installed version:"
+#~ msgstr "Geïnstalleerde versie:"
+
+#~ msgid "KDE Desktop"
+#~ msgstr "KDE Bureaublad"
+
+#~ msgid "Launch search"
+#~ msgstr "Zoeken starten"
+
+#~ msgid "Loading"
+#~ msgstr "Laden van"
+
+#~ msgid "Loading packages ..."
+#~ msgstr "Laden van pakketten ..."
+
+#~ msgid "Localization"
+#~ msgstr "Lokalisatie"
+
+#~ msgid "Misc"
+#~ msgstr "Overige"
+
+#~ msgid "Modified"
+#~ msgstr "Aangepast"
+
+#~ msgid "Netpkg is released under the terms of the Gnu Public Licence v2,"
+#~ msgstr ""
+#~ "Netpkg is uitgebracht onder de voorwaarden van de Gnu Public Licence v2,"
+
+#~ msgid "Network"
+#~ msgstr "Netwerk"
+
+#~ msgid "No .new config files yet"
+#~ msgstr "Nog geen .new configuratiebestanden"
+
+#~ msgid "Not installed"
+#~ msgstr "Niet geïnstalleerd"
+
+#~ msgid "Package size:"
+#~ msgstr "Pakketgrootte:"
+
+#~ msgid "Processing packages ..."
+#~ msgstr "Bezig met verwerken van pakketten ..."
+
+#~ msgid "Refreshing database"
+#~ msgstr "Verversen van de gegevensbank"
+
+#~ msgid "Removing"
+#~ msgstr "Verwijderen van"
+
+#~ msgid "Report"
+#~ msgstr "Rapport"
+
+#~ msgid "Runtime libraries"
+#~ msgstr "Bibliotheken"
+
+#~ msgid "Search a pattern through packages descriptions"
+#~ msgstr "Zoek met een woord(deel) in de beschrijving van de pakketten"
+
+#~ msgid "Search for .new configuration files to be activated"
+#~ msgstr "Zoek naar .new configuratiebestanden die geactiveerd moeten worden"
+
+#~ msgid "Select"
+#~ msgstr "Selecteer"
+
+#~ msgid "Show all installed packages"
+#~ msgstr "Toon alle geinstalleerde pakketten"
+
+#~ msgid "Show installed packages that have either been updated or downgraded"
+#~ msgstr ""
+#~ "Toon geïnstalleerde pakketten die zijn bijgewerkt of zijn teruggezet in "
+#~ "versie"
+
+#~ msgid "Skipping"
+#~ msgstr "Overslaan van"
+
+#~ msgid "Successfully installed:"
+#~ msgstr "Succesvol geïnstalleerd:"
+
+#~ msgid "System"
+#~ msgstr "Systeem"
+
+#~ msgid "Uninstall packages"
+#~ msgstr "De-installeer pakketten"
+
+#~ msgid "Uninstalled packages:"
+#~ msgstr "Gede-installeerde pakketten:"
+
+#~ msgid "Updating"
+#~ msgstr "Bijwerken - "
+
+#~ msgid "Welcome to Netpkg !"
+#~ msgstr "Welkom in Netpkg !"
+
+#~ msgid "Xorg"
+#~ msgstr "Xorg"
+
+#~ msgid "You are about to remove all cached packages, are you sure ?"
+#~ msgstr ""
+#~ "U staat op het punt alle lokaal opgeslagen pakketten te verwijderen, weet "
+#~ "U het zeker ?"
+
+#~ msgid "Activate the following config files"
+#~ msgstr "Activeer de volgende configuratiebestanden"
+
+#~ msgid "Filters"
+#~ msgstr "Filters"
+
+#~ msgid "Install process result"
+#~ msgstr "Resultaat van het installatieproces"
+
+#~ msgid "Really clean local cache ?"
+#~ msgstr "Wilt u de lokale opslag echt leegmaken ?"
+
+#~ msgid "Search"
+#~ msgstr "Zoek"
+
+#~ msgid "Uninstall process result"
+#~ msgstr "Resultaat van het de-installatieproces"
+
+#~ msgid "Building package tree"
+#~ msgstr "Creatie van pakketoverzicht"
+
+#~ msgid ""
+#~ "Database loaded from cache, please reload the mirror before installing "
+#~ "packages"
+#~ msgstr ""
+#~ "Gegevensbank geladen vanaf tijdelijke opslag, laad de mirror opnieuw "
+#~ "alvorens pakketten te installeren"
+
+#~ msgid "Load or reload mirror content"
+#~ msgstr "Laad of herlaad de inhoud van de mirror"
+
+#~ msgid ""
+#~ "Show new packages, which are available on the mirror and not installed yet"
+#~ msgstr ""
+#~ "Toon nieuwe pakketten die beschikbaar zijn op de mirror en nog niet "
+#~ "geïnstalleerd zijn"
+
+#~ msgid "No database loaded, please choose a mirror and load it"
+#~ msgstr ""
+#~ "Geen gegevensbank geladen, kies eerst een mirror en laad deze vervolgens"
+
+#~ msgid "Include deps"
+#~ msgstr "Afhankelijkheden meenemen"
+
+#~ msgid "Include orphan deps"
+#~ msgstr "Losstaande afhankelijkheden meenemen"
+
+#~ msgid ""
+#~ "Install button : Compute dependencies and then install/upgrade selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Installatie knop : bepaal de afhankelijkheden en installeer de "
+#~ "geselecteerde pakketten, of werk ze bij"
+
+#~ msgid "Installed dependencies:"
+#~ msgstr "Geïnstalleerde afhankelijkheden:"
+
+#~ msgid "Installed packages that require"
+#~ msgstr "Geïnstalleerde pakketten die afhankelijk zijn van"
+
+#~ msgid "Missing or updated dependencies:"
+#~ msgstr "Ontbrekende of bijgewerkte afhankelijkheden:"
+
+#~ msgid "Orphan dependencies:"
+#~ msgstr "Losstaande afhankelijkheden:"
+
+#~ msgid ""
+#~ "Uninstall button : Compute dependencies and then uninstall selected "
+#~ "packages"
+#~ msgstr ""
+#~ "De-installatie knop : bepaal afhankelijkheden en de-installeer de "
+#~ "geselecteerde pakketten"
+
+#~ msgid "not installed"
+#~ msgstr "niet geïnstalleerd"
+
+#~ msgid "Orphans"
+#~ msgstr "Losstaand"
+
+#~ msgid ""
+#~ "Show installed packages that are not required by any other installed "
+#~ "package"
+#~ msgstr ""
+#~ "Toon geïnstalleerde pakketten die niet nodig zijn voor andere "
+#~ "geïnstalleerde pakketten"
+
+#~ msgid "Connecting to mirror"
+#~ msgstr "Verbinding maken met mirror"
+
+#~ msgid "Creating database"
+#~ msgstr "Bezig met aanmaken van gegevensbank"
+
+#~ msgid "mirror metadata"
+#~ msgstr "mirror metadata"
+
+#~ msgid ""
+#~ "Enter the URL to mirror or choose one from the history. Mirrors which "
+#~ "have been loaded properly will be auto-saved in the history"
+#~ msgstr ""
+#~ "Vul de URL in van de mirror, of maak een keuze uit het bestaande "
+#~ "overzicht. Mirrors die op correcte wijze zijn geladen worden automatisch "
+#~ "bewaard in het overzicht"
+
+#~ msgid "Local"
+#~ msgstr "Lokaal"
+
+#~ msgid "Location:"
+#~ msgstr "Locatie:"
+
+#~ msgid "Actions"
+#~ msgstr "Acties"
+
+#~ msgid "Selected packages:"
+#~ msgstr "Geselecteerde pakketten:"
+
+#~ msgid "Category"
+#~ msgstr "Categorie"
+
+#~ msgid "Available version"
+#~ msgstr "Beschikbare versie"
+
+#~ msgid "Information"
+#~ msgstr "Informatie"

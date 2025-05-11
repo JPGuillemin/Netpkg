@@ -1,0 +1,453 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr "Cerrar"
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr "Error"
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr "Instalando"
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr "No hay paquetes que procesar"
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr "Procesando"
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr "Reinstalando"
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr "Actualizando"
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr "Uso :"
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr "paquetes"
+
+#~ msgid "(blacklisted)"
+#~ msgstr "(en lista negra)"
+
+#~ msgid ".new files activation"
+#~ msgstr "activación de archivos .new"
+
+#~ msgid "Accept .new config files"
+#~ msgstr "Aceptar archivos de configuración .new"
+
+#~ msgid "Activate new config"
+#~ msgstr "Activar nueva configuración"
+
+#~ msgid "Available packages:"
+#~ msgstr "Paquetes disponibles"
+
+#~ msgid "Available version:"
+#~ msgstr "Versión disponible"
+
+#~ msgid "Blacklist"
+#~ msgstr "Lista negra"
+
+#~ msgid "Clean cache"
+#~ msgstr "Limpiar cache"
+
+#~ msgid "Clean the local packages cache !"
+#~ msgstr "Limpiar la cache de paquetes locales !"
+
+#~ msgid "Click here to exit Netpkg!"
+#~ msgstr "Cliquea aquí para cerrar Netpkg!"
+
+#~ msgid "Console Applications"
+#~ msgstr "Aplicaciones de consola"
+
+#~ msgid "Creating local packages database"
+#~ msgstr "Creando base de datos de paquetes locales"
+
+#~ msgid "Database loaded"
+#~ msgstr "Base de datos cargada"
+
+#~ msgid "Description:"
+#~ msgstr "Descripción"
+
+#~ msgid "Development libraries"
+#~ msgstr "Librerias de desarrollo"
+
+#~ msgid "Done"
+#~ msgstr "Listo"
+
+#~ msgid "Downgrading"
+#~ msgstr "Desactualizando"
+
+#~ msgid "Exit"
+#~ msgstr "Salir"
+
+#~ msgid "Failed connecting to"
+#~ msgstr "Falló la conexión"
+
+#~ msgid "Failed to download"
+#~ msgstr "Falló la descarga"
+
+#~ msgid "Failed to install:"
+#~ msgstr "Falló la instalación:"
+
+#~ msgid "Games"
+#~ msgstr "Juegos"
+
+#~ msgid "Gnome Desktop"
+#~ msgstr "Escritorio Gnome"
+
+#~ msgid "Graphical Applications"
+#~ msgstr "Aplicaciones gráficas"
+
+#~ msgid "Install"
+#~ msgstr "Instalar"
+
+#~ msgid "Install actions"
+#~ msgstr "Acciones de instalación"
+
+#~ msgid "Install packages"
+#~ msgstr "Instalar paquetes"
+
+#~ msgid "Install size:"
+#~ msgstr "Tamaño de la instalación:"
+
+#~ msgid "Installed"
+#~ msgstr "Instalado"
+
+#~ msgid "Installed packages:"
+#~ msgstr "Paquetes instalados:"
+
+#~ msgid "Installed version:"
+#~ msgstr "Version instalada:"
+
+#~ msgid "KDE Desktop"
+#~ msgstr "Escritorio KDE"
+
+#~ msgid "Launch search"
+#~ msgstr "Lanzar búsqueda"
+
+#~ msgid "Loading"
+#~ msgstr "Cargando"
+
+#~ msgid "Loading packages ..."
+#~ msgstr "Cargando paquetes..."
+
+#~ msgid "Localization"
+#~ msgstr "Lenguaje"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Misc"
+#~ msgstr "Varios"
+
+#~ msgid "Modified"
+#~ msgstr "Modificado"
+
+#~ msgid "Netpkg "
+#~ msgstr "Netpkg"
+
+#~ msgid "Netpkg is released under the terms of the Gnu Public Licence v2,"
+#~ msgstr "Netpkg es publicado bajo los términos de la Gnu Public Licence v2,"
+
+#~ msgid "Network"
+#~ msgstr "Red"
+
+#~ msgid "No .new config files yet"
+#~ msgstr "Aún no hay archivos de configuración .new"
+
+#~ msgid "Not installed"
+#~ msgstr "No instalado"
+
+#~ msgid "Nothing to process"
+#~ msgstr "Nada que procesar"
+
+#~ msgid "Origin:"
+#~ msgstr "Origen:"
+
+#~ msgid "Package"
+#~ msgstr "Paquete"
+
+#~ msgid "Package size:"
+#~ msgstr "Tamaño del paquete:"
+
+#~ msgid "Packages"
+#~ msgstr "Paquetes"
+
+#~ msgid "Patches"
+#~ msgstr "Correcciones"
+
+#~ msgid "Processing packages ..."
+#~ msgstr "Procesando paquetes..."
+
+#~ msgid "Provided libraries"
+#~ msgstr "Librerías proporcionadas"
+
+#~ msgid "Real time log viewer"
+#~ msgstr "Visualizador del registro en tiempo real"
+
+#~ msgid "Refreshing database"
+#~ msgstr "Actualizando base de datos"
+
+#~ msgid "Removable packages:"
+#~ msgstr "Paquetes removibles"
+
+#~ msgid "Removing"
+#~ msgstr "Removiendo"
+
+#~ msgid "Report"
+#~ msgstr "Reporte"
+
+#~ msgid "Required packages (WARNING!):"
+#~ msgstr "Paquetes requeridos (ADVERTENCIA!):"
+
+#~ msgid "Rollback to"
+#~ msgstr "Restaurar"
+
+#~ msgid "Runtime libraries"
+#~ msgstr "Librerías de tiempo de ejecución"
+
+#~ msgid "Search a pattern through packages descriptions"
+#~ msgstr "Buscar un patrón en las descripciones de los paquetes"
+
+#~ msgid "Search for .new configuration files to be activated"
+#~ msgstr "Buscar archivos .new de configuración para activar"
+
+#~ msgid "Select"
+#~ msgstr "Seleccionar"
+
+#~ msgid "Select all updated packages"
+#~ msgstr "Seleccionar todos los paquetes actualizados"
+
+#~ msgid "Select updates"
+#~ msgstr "Seleccionar actualizaciones"
+
+#~ msgid "Selected packages install size:"
+#~ msgstr "Tamaño de la instalacion de los paquetes seleccionados:"
+
+#~ msgid "Selected packages size:"
+#~ msgstr "Tamaño de los paquetes seleccionados:"
+
+#~ msgid "Show all installed packages"
+#~ msgstr "Mostrar todos los paquetes instalados"
+
+#~ msgid "Show installed packages that have either been updated or downgraded"
+#~ msgstr ""
+#~ "Mostrar paquetes instalados que han sido o bien actualizados, o "
+#~ "desactualizados"
+
+#~ msgid "Show logs"
+#~ msgstr "Mostrar registros"
+
+#~ msgid "Skipping"
+#~ msgstr "Saltando"
+
+#~ msgid "Successfully installed:"
+#~ msgstr "Instalado exitosamente"
+
+#~ msgid "System"
+#~ msgstr "Sistema"
+
+#~ msgid "Total packages install size:"
+#~ msgstr "Tamaño total de la instalación de los paquetes:"
+
+#~ msgid "Total packages size:"
+#~ msgstr "Tamaño total de los paquetes"
+
+#~ msgid "Uninstall"
+#~ msgstr "Desinstalar"
+
+#~ msgid "Uninstall actions"
+#~ msgstr "Acciones de desinstalación"
+
+#~ msgid "Uninstall packages"
+#~ msgstr "Desinstalar paquetes"
+
+#~ msgid "Uninstalled packages:"
+#~ msgstr "Paquetes desinstalados:"
+
+#~ msgid "Unselect"
+#~ msgstr "Deseleccionar"
+
+#~ msgid "Unselect all"
+#~ msgstr "Deseleccionar todos"
+
+#~ msgid "Unselect all previously selected packages"
+#~ msgstr "Deseleccionar todos los paquetes previamente seleccionados"
+
+#~ msgid "Updating"
+#~ msgstr "Actualizando"
+
+#~ msgid "Welcome to Netpkg !"
+#~ msgstr "Bienvenido a Netpkg !"
+
+#~ msgid "Whitelist"
+#~ msgstr "Lista blanca"
+
+#~ msgid "Xorg"
+#~ msgstr "Xorg"
+
+#~ msgid "You are about to remove all cached packages, are you sure ?"
+#~ msgstr "Estas a punto de remover todos los paquetes de la cache, seguro ?"
+
+#~ msgid "on"
+#~ msgstr "en"
+
+#~ msgid "Activate the following config files"
+#~ msgstr "Activar los siguientes archivos de configuración"
+
+#~ msgid "Filters"
+#~ msgstr "Filtros"
+
+#~ msgid "Install process result"
+#~ msgstr "Resultado del proceso de instalación"
+
+#~ msgid "Really clean local cache ?"
+#~ msgstr "Limpiar la cache local, seguro ?"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
+
+#~ msgid "Uninstall process result"
+#~ msgstr "Resultado del proceso de desinstalación"
+
+#~ msgid "Building package tree"
+#~ msgstr "Construyendo el árbol de paquetes"
+
+#~ msgid ""
+#~ "Database loaded from cache, please reload the mirror before installing "
+#~ "packages"
+#~ msgstr ""
+#~ "Base de datos cargada desde cache, por favor refresque el mirror antes de "
+#~ "instalar paquetes"
+
+#~ msgid "Load or reload mirror content"
+#~ msgstr "Cargar o recargar contenido del mirror"
+
+#~ msgid "Reload mirror"
+#~ msgstr "Recargar mirror"
+
+#~ msgid ""
+#~ "Show new packages, which are available on the mirror and not installed yet"
+#~ msgstr ""
+#~ "Muestra paquetes nuevos, los cuales estám disponibles en el mirror y no "
+#~ "han sido instalados aún"
+
+#~ msgid "No database loaded, please choose a mirror and load it"
+#~ msgstr ""
+#~ "Ninguna base de datos cargada, por favor selecciona un mirror y cárgalo"
+
+#~ msgid "Available"
+#~ msgstr "Disponible"
+
+#~ msgid "Compute dependencies and then install/upgrade selected packages"
+#~ msgstr ""
+#~ "Computar dependencias y luego instalar/actualizar los paquetes "
+#~ "seleccionados"
+
+#~ msgid "Compute dependencies and then uninstall selected packages"
+#~ msgstr ""
+#~ "Computar dependencias y luego desinstalar los paquetes seleccionados"
+
+#~ msgid "Include deps"
+#~ msgstr "Incluir dependencias"
+
+#~ msgid "Include orphan deps"
+#~ msgstr "Incluir dependencias huérfanas"
+
+#~ msgid ""
+#~ "Install button : Compute dependencies and then install/upgrade selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Botón instalar : Computa las dependencias y luego instala/actualiza los "
+#~ "paquetes seleccionados"
+
+#~ msgid "Installed dependencies:"
+#~ msgstr "Dependencias instaladas"
+
+#~ msgid "Installed packages that require"
+#~ msgstr "Paquetes instalados que requiere"
+
+#~ msgid "Missing dependencies packages install size:"
+#~ msgstr "Tamaño de la instalación de paquetes de dependencias faltantes:"
+
+#~ msgid "Missing dependencies packages size:"
+#~ msgstr "Tamaño de los paquetes de dependencia faltantes:"
+
+#~ msgid "Missing or updated dependencies:"
+#~ msgstr "Dependencias faltantes o actualizadas:"
+
+#~ msgid "Orphan dependencies:"
+#~ msgstr "Dependencias huérfanas"
+
+#~ msgid ""
+#~ "Uninstall button : Compute dependencies and then uninstall selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Botón desinstalar : Computa las dependencias y luego desinstala los "
+#~ "paquetes seleccionados"
+
+#~ msgid "not installed"
+#~ msgstr "no instalado"
+
+#~ msgid "Orphans"
+#~ msgstr "huérfanos"
+
+#~ msgid "Show all packages, or just standard packages"
+#~ msgstr "Mostrar todos los paquetes, o solo los paquetes estándar"
+
+#~ msgid "Show extra packages"
+#~ msgstr "Mostrar paquetes extra"
+
+#~ msgid ""
+#~ "Show installed packages that are not required by any other installed "
+#~ "package"
+#~ msgstr ""
+#~ "Mostrar paquetes instalados que no son requeridos por otro paquete "
+#~ "instalado"
+
+#~ msgid "Connecting to mirror"
+#~ msgstr "Conectándose al mirror"
+
+#~ msgid "Creating database"
+#~ msgstr "Creando base de datos"
+
+#~ msgid "mirror metadata"
+#~ msgstr "Metadatos del mirror"
+
+#~ msgid ""
+#~ "Enter the URL to mirror or choose one from the history. Mirrors which "
+#~ "have been loaded properly will be auto-saved in the history"
+#~ msgstr ""
+#~ "Ingresa la URL del mirror o elige una del historial. Los mirrors que "
+#~ "hayan sido cargados apropiadamente serán guardados automáticamente en el "
+#~ "historial"

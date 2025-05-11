@@ -1,0 +1,255 @@
+#!/bin/bash
+# Copyright Jean-Philippe Guillemin <h1p8r10n@yandex.com>. This program is free software; you can redistribute
+# it and/or modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or (at your option)
+# any later version. Please take a look at http://www.gnu.org/copyleft/gpl.htm
+#
+# Zenpkg is a tool for easily install or upgrade packages from the desktop. 
+#
+#
+
+version="9.1"
+
+# Take a look at "Xdialog" and use it instead of "dialog" in case X is running
+if [[ "$DISPLAY" && "$(which Xdialog 2>&1 | grep -v "which: no")" ]]; then
+	dialog="Xdialog --fill --wrap --icon netpkg"
+	shortttl='3000'
+	longttl='8000'
+	xflag="yes"
+else
+	dialog="dialog"
+	shortttl=''
+	longttl=''
+	unset xflag
+fi
+
+# Translations only work with utf8 locales
+if [ ! `echo $LANG | grep -i utf` ]; then
+	LANG=en_US
+fi
+
+# Gettext internationalization
+export TEXTDOMAIN="netpkg"
+export TEXTDOMAINDIR="/usr/share/locale"
+. gettext.sh
+
+if [ ! "$1" ] ; then 
+  $dialog --ok-label "Close" --title "Error" --msgbox "$(eval_gettext 'Usage :') zenpkg [package1] [package2] ... [packageN]" 6 70
+  exit
+fi
+
+export configfile="/etc/netpkg.conf"
+
+untouchable=$(sed -n 's/^[ \t]*Protected_files[ \t]*=[ \t]*\(.*\)$/\1/p' $configfile)
+export untouchable="${untouchable:=/etc/lilo.conf /etc/fstab}"
+
+packagelogs=$(sed -n 's/^[ \t]*Package_logs[ \t]*=[ \t]*\(.*\)$/\1/p' $configfile)
+export packagelogs="${packagelogs:=/var/log/packages}"
+
+netpkgdir=$(sed -n 's/^[ \t]*Netpkg_dir[ \t]*=[ \t]*\(.*\)$/\1/p' $configfile)
+export netpkgdir="${netpkgdir:=/var/netpkg}"
+
+logfile=$(sed -n 's/^[ \t]*Logfile[ \t]*=[ \t]*\(.*\)$/\1/p' $configfile)
+if [ "$logfile" == "none" ]; then
+  export logfile="/dev/null"
+else
+  export logfile="${logfile:=/var/log/netpkg.log}"
+fi
+
+# create the buffer directory 
+mkdir -p $netpkgdir 2>/dev/null
+export buffer="$netpkgdir"
+mkdir -p $buffer 2>/dev/null
+
+# Build a list of installed packages
+getlocalpkglist(){
+  rm -f $buffer/localpkglist
+  for meta in $(ls $packagelogs) ; do 
+    package="$(sed -n 's/^[ \t]*PACKAGE LOCATION:[ \t]*\(.*\)[ \t]*$/\1/p' $packagelogs/$meta)"
+    echo ${package##*/} >> $buffer/localpkglist
+  done
+}
+
+
+
+# File protector function ######################################
+
+protect() {
+
+  # we backup all critical files as .old
+  for protectedfile in $untouchable ; do
+    [ -e $protectedfile ] && cp -f $protectedfile $protectedfile.old 2>/dev/null
+  done
+
+}
+
+unprotect() {
+
+# delete backuped files in case it's the same OR no newer was added
+for protectedfile in $untouchable ; do
+  if [ -e $protectedfile ]; then
+    newfile="$protectedfile"
+    oldfile="$newfile.old"
+    # clean up the redundant copy
+    if [ "$(cat $oldfile | md5sum 2>/dev/null)" = "$(cat $newfile | md5sum 2>/dev/null)" ]; then
+      rm $oldfile 2>/dev/null
+    fi
+  fi
+  # Otherwise, we leave the .old copy for root to consider...
+done
+
+}
+
+# take a look at local packages list to see which version of the $1 package installed
+checkinstalled(){
+  sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $buffer/localpkglist
+}
+
+# Check package integrity ######################################
+# checkzip ($package) 
+checkzip(){
+  [ "$(echo $package | egrep ".*\.tlz$")" ] && ZIP="lzma"
+  [ "$(echo $package | egrep ".*\.txz$")" ] && ZIP="lzma"
+  [ "$(echo $package | egrep ".*\.tgz$")" ] && ZIP="gzip"
+  $ZIP -tv $1 2>&1 | egrep -e "corrupt|invalid"  
+}
+
+
+# Install ($package) ######################################
+
+install(){
+
+  # we protect all critical files before package processing
+  protect
+  
+  if [[ -e $1 && ! "$(checkzip $1)" ]]; then
+    package="$(basename $1)"
+    echo "XXX"
+    echo "$(eval_gettext 'Installing') $package"
+    echo "XXX"
+    sleep 0.5
+    installpkg $1 2>&1 >/dev/null
+    echo "[I] $1 $(date)" >> $logfile
+  fi
+  
+  # We delete unchanged protected files or keep the old backuped one
+  unprotect
+
+}
+
+
+# Upgrade ($package) ######################################
+
+upgrade(){
+
+  # we protect all critical files before package processing
+  protect
+
+  # Check gzip integrity 
+  if [[ -e $1 && ! "$(checkzip $1)" ]]; then
+    package="$(basename $1)"
+    echo "XXX"
+    echo "$(eval_gettext 'Upgrading') $package"
+    echo "XXX"
+    sleep 0.5
+    upgradepkg --install-new $1 2>&1 >/dev/null
+    echo "[U] $1 $(date)" >> $logfile  
+  fi
+
+  # We delete unchanged protected files or keep the old backuped one
+  unprotect
+
+}
+
+# Reinstall ($package) with dialog box ######################################
+
+reinstall(){
+
+  # we protect all critical files before package processing
+  protect
+
+  # Check gzip integrity 
+  if [[ -e $1 && ! "$(checkzip $1)" ]]; then
+    package="$(basename $1)"
+    echo "XXX"
+    echo "$(eval_gettext 'Reinstalling') $package"
+    echo "XXX"
+    sleep 0.5
+    upgradepkg --reinstall $1 2>&1 >/dev/null
+    echo "[U] $1 $(date)" >> $logfile  
+  fi
+
+  # We delete unchanged protected files or keep the old backuped one
+  unprotect
+
+}
+
+# Are we given real packages ;)
+list=""
+for path in $* ; do
+	[ ! -e $path ] && continue
+	[ ! "echo $path | grep '.t[glx]z'" ] && continue
+	list="${list} $path"
+done
+
+# how many packages do we have to install
+pkgtotalcount=$(echo $list | wc -w)
+if [ $pkgtotalcount = 0 ] ; then 
+	$dialog --ok-label "$(eval_gettext 'Close')" --title "$(eval_gettext 'Error')" --msgbox "$(eval_gettext 'No package to process')" 6 30
+	exit
+fi
+
+getlocalpkglist
+
+step=$((100/$pkgtotalcount))
+[ $step -eq 0 ] && step=1
+pkgcount=0
+(
+for path in $list ; do
+
+	package="$(basename $path)"
+	progress=$(($pkgcount*$step))
+	echo $progress
+		  # the package name without "tXz"
+		  packagename=${package%.*}
+
+		  # the software name
+		  softname=${package%-*}; softname=${softname%-*}; softname=${softname%-*} 
+
+		  # take a look in pkgtool logs to see if we've got it installed
+		  installedpkg="$(checkinstalled $softname)"
+
+		  # Push the bar
+		  progress=$(($progress+$step/2))
+		  echo $progress
+
+		  if [ -e $packagelogs/$packagename ]; then
+			action="reinstall"
+		  elif [ -n "$installedpkg" ]; then
+			action="upgrade"
+		  else
+			action="install"
+		  fi
+
+		  case $action in
+			install)
+			  install $path
+			  ;;
+			reinstall)
+			  reinstall $path
+			  ;;
+			upgrade)
+			  upgrade $path
+		  esac
+		  progress=$(($progress+$step/2))
+		  echo $progress
+		  sleep 1
+
+	pkgcount=$(($pkgcount+1))
+done
+echo 100
+sleep 1
+) | $dialog --auto-placement --title "$(eval_gettext 'Processing') $pkgtotalcount $(eval_gettext 'packages')" --gauge "" 8 70
+
+
+

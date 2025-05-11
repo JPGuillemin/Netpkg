@@ -1,0 +1,545 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Netpkg 4.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: 2011-03-29 19:01+0100\n"
+"Last-Translator: Vadász Péter <peter.vadasz.78@gmail.com>\n"
+"Language-Team: Zenwalk.org <zenwalk-vip@lists.zenwalk.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Hungarian\n"
+"X-Poedit-Country: HUNGARY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr "Bezár"
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr "Hiba"
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr "Telepítés"
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr "Nincs feldogozandó csomag"
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr "Feldolgozás"
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr "Újratelepítés"
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr "Frissítés"
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr "Használat:"
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr "csomagok"
+
+#~ msgid "(blacklisted)"
+#~ msgstr "(letiltva)"
+
+#~ msgid ".new files activation"
+#~ msgstr ".new fájlok aktiválása"
+
+#~ msgid "Accept .new config files"
+#~ msgstr ".new konfigurációs fájlok engedélyezése"
+
+#~ msgid "Activate new config"
+#~ msgstr "Új konfiguráció aktiválása"
+
+#~ msgid "Available packages:"
+#~ msgstr "Elérhető csomagok:"
+
+#~ msgid "Available version:"
+#~ msgstr "Elérhető verzió:"
+
+#~ msgid "Blacklist"
+#~ msgstr "Fekete lista"
+
+#~ msgid "Clean cache"
+#~ msgstr "Tároló ürítése"
+
+#~ msgid "Clean the local packages cache !"
+#~ msgstr "A helyi csomagtár ürítése!"
+
+#~ msgid "Click here to exit Netpkg!"
+#~ msgstr "A Netpkg-ból való kilépéshez kattintson ide!"
+
+#~ msgid "Console Applications"
+#~ msgstr "Parancssori alkalmazások"
+
+#~ msgid "Creating local packages database"
+#~ msgstr "Helyi csomagadatbázis létrehozása"
+
+#~ msgid "Database loaded"
+#~ msgstr "Adatbázis betöltve"
+
+#~ msgid "Description:"
+#~ msgstr "Leírás:"
+
+#~ msgid "Development libraries"
+#~ msgstr "Fejlesztői könyvtárak"
+
+#~ msgid "Done"
+#~ msgstr "Kész"
+
+#~ msgid "Downgrading"
+#~ msgstr "Visszavonás"
+
+#~ msgid "Exit"
+#~ msgstr "Kilépés"
+
+#~ msgid "Failed connecting to"
+#~ msgstr "Nem lehet kapcsolódni a "
+
+#~ msgid "Failed to download"
+#~ msgstr "Nem lehet letölteni"
+
+#~ msgid "Failed to install:"
+#~ msgstr "Nem lehet telepíteni:"
+
+#~ msgid "Games"
+#~ msgstr "Játékok"
+
+#~ msgid "Gnome Desktop"
+#~ msgstr "Gnome Desktop"
+
+#~ msgid "Graphical Applications"
+#~ msgstr "Grafikus alkalmazások"
+
+#~ msgid "Install"
+#~ msgstr "Telepítés"
+
+#~ msgid "Install actions"
+#~ msgstr "Telepítési akciók"
+
+#~ msgid "Install packages"
+#~ msgstr "Csomagok telepítése"
+
+#~ msgid "Install size:"
+#~ msgstr "Telepítés mérete:"
+
+#~ msgid "Installed"
+#~ msgstr "Telepítve"
+
+#~ msgid "Installed packages:"
+#~ msgstr "Telepített csomagok:"
+
+#~ msgid "Installed version"
+#~ msgstr "Telepített verzió"
+
+#~ msgid "Installed version:"
+#~ msgstr "Telepített verzió:"
+
+#~ msgid "KDE Desktop"
+#~ msgstr "KDE Desktop"
+
+#~ msgid "Launch search"
+#~ msgstr "Keresés indítása"
+
+#~ msgid "Loading"
+#~ msgstr "Letöltés"
+
+#~ msgid "Loading packages ..."
+#~ msgstr "Csomagok töltése..."
+
+#~ msgid "Localization"
+#~ msgstr "Lokalizáció"
+
+#~ msgid "Menu"
+#~ msgstr "Menü"
+
+#~ msgid "Misc"
+#~ msgstr "Egyéb"
+
+#~ msgid "Modified"
+#~ msgstr "Módosítva"
+
+#~ msgid "Netpkg "
+#~ msgstr "Netpkg"
+
+#~ msgid "Netpkg is released under the terms of the Gnu Public Licence v2,"
+#~ msgstr "A Netpkg a Gnu Public Licence v2 alatt lett kiadva,"
+
+#~ msgid "Network"
+#~ msgstr "Hálózat"
+
+#~ msgid "No .new config files yet"
+#~ msgstr "Még nincsenek .new konfigurációs fájlok"
+
+#~ msgid "Not installed"
+#~ msgstr "Nincs telepítve"
+
+#~ msgid "Nothing to process"
+#~ msgstr "Nincs mit feldolgozni"
+
+#~ msgid "Origin:"
+#~ msgstr "Forrás:"
+
+#~ msgid "Package"
+#~ msgstr "Csomag"
+
+#~ msgid "Package size:"
+#~ msgstr "A csomag mérete: "
+
+#~ msgid "Packages"
+#~ msgstr "Csomagok"
+
+#~ msgid "Patches"
+#~ msgstr "Foltok"
+
+#~ msgid "Processing packages ..."
+#~ msgstr "Csomagok feldolgozása ..."
+
+#~ msgid "Provided libraries"
+#~ msgstr "Biztosított függvénykönyvtárak"
+
+#~ msgid "Real time log viewer"
+#~ msgstr "Valós idjű naplónéző"
+
+#~ msgid "Refreshing database"
+#~ msgstr "Adatbázis frissítése"
+
+#~ msgid "Removable packages:"
+#~ msgstr "Eltávolítható csomagok:"
+
+#~ msgid "Removing"
+#~ msgstr "Eltávolítás"
+
+#~ msgid "Report"
+#~ msgstr "Jelentés"
+
+#~ msgid "Required packages (WARNING!):"
+#~ msgstr "Szükséges csomagok (FIGYELEM!):"
+
+#~ msgid "Rollback to"
+#~ msgstr "Rollback to"
+
+#~ msgid "Runtime libraries"
+#~ msgstr "Futáskori könyvtárak"
+
+#~ msgid "Search a pattern through packages descriptions"
+#~ msgstr "Keresés a csomagleírásokban"
+
+#~ msgid "Search for .new configuration files to be activated"
+#~ msgstr "Keress aktivált .new konfigurációs fájlokat"
+
+#~ msgid "Select"
+#~ msgstr "Választ"
+
+#~ msgid "Select all updated packages"
+#~ msgstr "Az összes frissíthető csomag kijelölése"
+
+#~ msgid "Select updates"
+#~ msgstr "Frissítések kijelölése"
+
+#~ msgid "Selected packages install size:"
+#~ msgstr "A kiválasztott csomagok telepítési mérete:"
+
+#~ msgid "Selected packages size:"
+#~ msgstr "A kiválasztott csomagok mérete:"
+
+#~ msgid "Show all installed packages"
+#~ msgstr "Mutasd az összes telepített csomagot"
+
+#~ msgid "Show installed packages that have either been updated or downgraded"
+#~ msgstr ""
+#~ "Mutasd azokat a csomagokat amelyek frissítve vagy visszavonva lettek"
+
+#~ msgid "Show logs"
+#~ msgstr "Naplók mutatása"
+
+#~ msgid "Skipping"
+#~ msgstr "Kihagyás"
+
+#~ msgid "Successfully installed:"
+#~ msgstr "Sikeresen telepítve:"
+
+#~ msgid "System"
+#~ msgstr "Rendszer"
+
+#~ msgid "Total packages install size:"
+#~ msgstr "A csomagok teljes telepítési mérete:"
+
+#~ msgid "Total packages size:"
+#~ msgstr "A csomagok teljes mérete:"
+
+#~ msgid "Uninstall"
+#~ msgstr "Eltávolítás"
+
+#~ msgid "Uninstall actions"
+#~ msgstr "Eltávolítási akciók"
+
+#~ msgid "Uninstall packages"
+#~ msgstr "Csomagok eltávolítása"
+
+#~ msgid "Uninstalled packages:"
+#~ msgstr "Eltávolított csomagok:"
+
+#~ msgid "Unselect"
+#~ msgstr "Kijelölés megszüntetése"
+
+#~ msgid "Unselect all"
+#~ msgstr "Kijelölés megszüntetése"
+
+#~ msgid "Unselect all previously selected packages"
+#~ msgstr "Kijelölés megszüntetése a korábban kijelölt csomagoknál"
+
+#~ msgid "Updating"
+#~ msgstr "Frissítés"
+
+#~ msgid "Welcome to Netpkg !"
+#~ msgstr "Üdvözli a Netpkg!"
+
+#~ msgid "Whitelist"
+#~ msgstr "Fehér lista"
+
+#~ msgid "Xorg"
+#~ msgstr "Xorg"
+
+#~ msgid "You are about to remove all cached packages, are you sure ?"
+#~ msgstr "El akarja távolítani az összes letárolt csomagot?"
+
+#~ msgid "on"
+#~ msgstr "a"
+
+#~ msgid "Activate the following config files"
+#~ msgstr "Aktiválja a következő konfigurációs fájlokat"
+
+#~ msgid "Filters"
+#~ msgstr "Szűrők"
+
+#~ msgid "Install process result"
+#~ msgstr "Telepítési folyamat eredménye"
+
+#~ msgid "Really clean local cache ?"
+#~ msgstr "Valóban üríti a helyi csomagtárolót?"
+
+#~ msgid "Search"
+#~ msgstr "Keresés"
+
+#~ msgid "Uninstall process result"
+#~ msgstr "Eltávolítási folyamat eredménye"
+
+#~ msgid "Building package tree"
+#~ msgstr "Csomagfa építése"
+
+#~ msgid ""
+#~ "Database loaded from cache, please reload the mirror before installing "
+#~ "packages"
+#~ msgstr ""
+#~ "Adatbázis az ideiglenes tárolóból betöltve, kérem a csomagok telepítése "
+#~ "előtt frissítse a szerverről az adatbázist"
+
+#~ msgid "Load or reload mirror content"
+#~ msgstr "Be- vagy újra tölti egy szerver tartalmát"
+
+#~ msgid "Reload mirror"
+#~ msgstr "Tükör újratöltése"
+
+#~ msgid ""
+#~ "Show new packages, which are available on the mirror and not installed yet"
+#~ msgstr ""
+#~ "Mutasd azokat az új csomagokat, melyek elérhetőek a szerveren és még "
+#~ "nincsenek telepítve"
+
+#~ msgid "No database loaded, please choose a mirror and load it"
+#~ msgstr ""
+#~ "Nincsen betöltött adatbázis, kérem válasszon egy szervert és töltse be"
+
+#~ msgid "Available"
+#~ msgstr "Elérhető"
+
+#~ msgid "Compute dependencies and then install/upgrade selected packages"
+#~ msgstr ""
+#~ "Függőségek számítása majd a választott csomagok telepítése/frissítése"
+
+#~ msgid "Compute dependencies and then uninstall selected packages"
+#~ msgstr "Függőségek számítása majd a választott csomagok eltávolítása"
+
+#~ msgid "Include deps"
+#~ msgstr "Felvett függőségek"
+
+#~ msgid "Include orphan deps"
+#~ msgstr "Felvett árva függőségek"
+
+#~ msgid ""
+#~ "Install button : Compute dependencies and then install/upgrade selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Telepítés gomb : Függőségek számítása majd a választott csomagok "
+#~ "telepítése/frissítése"
+
+#~ msgid "Installed dependencies:"
+#~ msgstr "Telepített függőségek:"
+
+#~ msgid "Installed packages that require"
+#~ msgstr "Telepített csomagok amelyek szükségesek"
+
+#~ msgid "Missing dependencies packages install size:"
+#~ msgstr "Hiányzó függőségi csomagok telepítési mérete:"
+
+#~ msgid "Missing dependencies packages size:"
+#~ msgstr "Hiányzó függőségi csomagok mérete:"
+
+#~ msgid "Missing or updated dependencies:"
+#~ msgstr "Hiányzó vagy frissített függőségek:"
+
+#~ msgid "Orphan dependencies:"
+#~ msgstr "Árva függőségek:"
+
+#~ msgid ""
+#~ "Uninstall button : Compute dependencies and then uninstall selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Eltávolítás gomb : Függőségek számítása és a kiválasztott csomagok "
+#~ "eltávolítása"
+
+#~ msgid "not installed"
+#~ msgstr "nem telepített"
+
+#~ msgid "Orphans"
+#~ msgstr "Árvák"
+
+#~ msgid "Show all packages, or just standard packages"
+#~ msgstr "Mutassa az összes csomagot, vagy csak az általános csomagokat"
+
+#~ msgid "Show extra packages"
+#~ msgstr "Mutassa az extra csomagokat"
+
+#~ msgid ""
+#~ "Show installed packages that are not required by any other installed "
+#~ "package"
+#~ msgstr ""
+#~ "Mutasd azokat a telepített csomagokat amelyek nem szükségesek egyetlen "
+#~ "telepített csomaghoz sem"
+
+#~ msgid "Connecting to mirror"
+#~ msgstr "Csatlakozás a szerverhez"
+
+#~ msgid "Creating database"
+#~ msgstr "Adatbázis létrehozása"
+
+#~ msgid "mirror metadata"
+#~ msgstr "szerver metaadat"
+
+#~ msgid ""
+#~ "Enter the URL to mirror or choose one from the history. Mirrors which "
+#~ "have been loaded properly will be auto-saved in the history"
+#~ msgstr ""
+#~ "Írja be a szerver URL-jét vagy válasszon egyet a listából. A szerverek "
+#~ "amelyek már voltak betöltve automatikusan mentésre kerülnek."
+
+#~ msgid "Local"
+#~ msgstr "Helyi"
+
+#~ msgid "Location:"
+#~ msgstr "Lelőhely:"
+
+#~ msgid "Checklist Mode : only show selected packages and related information"
+#~ msgstr ""
+#~ "Jegyzék mód : csak a kiválasztott csomagok és a kapcsolódó információk "
+#~ "mutatása"
+
+#~ msgid "Actions"
+#~ msgstr "Műveletek"
+
+#~ msgid "No package selected"
+#~ msgstr "Nincs kiválasztott csomag"
+
+#~ msgid "Selected packages:"
+#~ msgstr "Választott csomagok:"
+
+#~ msgid "Category"
+#~ msgstr "Kategória"
+
+#~ msgid "Available version"
+#~ msgstr "Elérhető verzió"
+
+#~ msgid "Information"
+#~ msgstr "Információ"
+
+#~ msgid "Show installed packages that have not been updated or downgraded"
+#~ msgstr ""
+#~ "Mutasd azokat a csomagokat amelyek nem lettek frissítve vagy visszavonva"
+
+#~ msgid ""
+#~ "Compute dependencies and launch the action window on selected packages to "
+#~ "install / reinstall / upgrade / uninstall"
+#~ msgstr ""
+#~ "Függőségek számítása és a választott csomagok telepítése / "
+#~ "újratelepítése / frissítése / eltávolítása"
+
+#~ msgid "Install available"
+#~ msgstr "Elérhető telepítése"
+
+#~ msgid "Processing packages & deps ..."
+#~ msgstr "Csomagok & függőségek feldolgozása ..."
+
+#~ msgid "Reload mirror content"
+#~ msgstr "Szerver tartalmának újratöltése"
+
+#~ msgid "Remove installed"
+#~ msgstr "Telepített eltávolítása"
+
+#~ msgid "Removing packages ..."
+#~ msgstr "Csomagok eltávolítása..."
+
+#~ msgid "Downgrades"
+#~ msgstr "Visszavont frissítés"
+
+#~ msgid "New"
+#~ msgstr "Új"
+
+#~ msgid "Show already installed packages"
+#~ msgstr "Mutasd a már telepített csomagokat"
+
+#~ msgid "Show packages from mirror that are not installed yet"
+#~ msgstr "Mutasd a még nem telepített csomagokat"
+
+#~ msgid ""
+#~ "Show packages from mirror with higher version than the installed version"
+#~ msgstr "Mutasd a telepítettnél magasabb verziószámú csomagokat"
+
+#~ msgid ""
+#~ "Show packages from mirror with lower version than the installed version"
+#~ msgstr "Mutasd a telepítettnél alacsonyabb verziószámú csomagokat"
+
+#~ msgid "Updates"
+#~ msgstr "Frissítések"
+
+#~ msgid "Selection"
+#~ msgstr "Választás"
+
+#~ msgid "Applications"
+#~ msgstr "Alkalmazások"
+
+#~ msgid "Libraries"
+#~ msgstr "Könyvtárak"
+
+#~ msgid "Xwindow"
+#~ msgstr "Xwindow"

@@ -1,0 +1,533 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Netpkg 4.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 15:20+0200\n"
+"PO-Revision-Date: 2009-06-01 00:10+0100\n"
+"Last-Translator: Claus Futtrup <cfuttrup@gmail.com>\n"
+"Language-Team: Zenwalk.org <zenwalk-vip@lists.zenwalk.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zenpkg:198
+#, sh-format
+msgid "Close"
+msgstr "Luk"
+
+#: zenpkg:198
+#, sh-format
+msgid "Error"
+msgstr "Fejl"
+
+#: zenpkg:128
+#, sh-format
+msgid "Installing"
+msgstr "Installerer"
+
+#: zenpkg:198
+#, sh-format
+msgid "No package to process"
+msgstr "Ingen pakke at bearbejde"
+
+#: zenpkg:252
+#, sh-format
+msgid "Processing"
+msgstr "Bearbejder"
+
+#: zenpkg:175
+#, sh-format
+msgid "Reinstalling"
+msgstr "Geninstallerer"
+
+#: zenpkg:152
+#, sh-format
+msgid "Upgrading"
+msgstr "Opgraderer"
+
+#: zenpkg:37
+#, sh-format
+msgid "Usage :"
+msgstr "Brug :"
+
+#: zenpkg:252
+#, sh-format
+msgid "packages"
+msgstr "pakker"
+
+#~ msgid "(blacklisted)"
+#~ msgstr "(sortlistet)"
+
+#~ msgid ".new files activation"
+#~ msgstr "Aktivering af .new filer"
+
+#~ msgid "Accept .new config files"
+#~ msgstr "Accepter .new konfigurationsfiler"
+
+#~ msgid "Activate new config"
+#~ msgstr "Aktiver ny konfiguration"
+
+#~ msgid "Available packages:"
+#~ msgstr "Tilgængelige pakker:"
+
+#~ msgid "Available version:"
+#~ msgstr "Tilgængelig version:"
+
+#~ msgid "Blacklist"
+#~ msgstr "Sortliste"
+
+#~ msgid "Clean cache"
+#~ msgstr "Rens cachelager"
+
+#~ msgid "Clean the local packages cache !"
+#~ msgstr "Rens lokalt pakkecache"
+
+#~ msgid "Click here to exit Netpkg!"
+#~ msgstr "Klik her for at afslutte Netpkg!"
+
+#~ msgid "Console Applications"
+#~ msgstr "Kommandolinie programmer"
+
+#~ msgid "Creating local packages database"
+#~ msgstr "Opretter lokal pakkedatabase"
+
+#~ msgid "Database loaded"
+#~ msgstr "Database indlæst"
+
+#~ msgid "Description:"
+#~ msgstr "Beskrivelse:"
+
+#~ msgid "Development libraries"
+#~ msgstr "Udviklingsbiblioteker"
+
+#~ msgid "Done"
+#~ msgstr "Færdig"
+
+#~ msgid "Downgrading"
+#~ msgstr "Nedgraderer"
+
+#~ msgid "Exit"
+#~ msgstr "Afslut"
+
+#~ msgid "Failed connecting to"
+#~ msgstr "Mislykket forbindelse til"
+
+#~ msgid "Failed to download"
+#~ msgstr "Mislykket download"
+
+#~ msgid "Failed to install:"
+#~ msgstr "Mislykket installation:"
+
+#~ msgid "Games"
+#~ msgstr "Spil"
+
+#~ msgid "Gnome Desktop"
+#~ msgstr "Gnome Desktop"
+
+#~ msgid "Graphical Applications"
+#~ msgstr "Grafiske programmer"
+
+#~ msgid "Install"
+#~ msgstr "Installer"
+
+#~ msgid "Install actions"
+#~ msgstr "Installationshandlinger"
+
+#~ msgid "Install packages"
+#~ msgstr "Installer pakker"
+
+#~ msgid "Install size:"
+#~ msgstr "Installationsstørrelse:"
+
+#~ msgid "Installed"
+#~ msgstr "Installeret"
+
+#~ msgid "Installed packages:"
+#~ msgstr "Installerede pakker:"
+
+#~ msgid "Installed version"
+#~ msgstr "Installeret version"
+
+#~ msgid "Installed version:"
+#~ msgstr "Installeret version:"
+
+#~ msgid "KDE Desktop"
+#~ msgstr "KDE Desktop"
+
+#~ msgid "Launch search"
+#~ msgstr "Kør søgning"
+
+#~ msgid "Loading"
+#~ msgstr "Indlæser"
+
+#~ msgid "Loading packages ..."
+#~ msgstr "Indlæser pakker..."
+
+#~ msgid "Localization"
+#~ msgstr "Lokalisering"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Misc"
+#~ msgstr "Diverse"
+
+#~ msgid "Modified"
+#~ msgstr "Modificeret"
+
+#~ msgid "Netpkg "
+#~ msgstr "Netpkg "
+
+#~ msgid "Netpkg is released under the terms of the Gnu Public Licence v2,"
+#~ msgstr "Netpkg er frigivet under betingelserne i Gnu Public Licence V2,"
+
+#~ msgid "Network"
+#~ msgstr "Netværk"
+
+#~ msgid "No .new config files yet"
+#~ msgstr "Ingen .new konfigurationsfiler endnu"
+
+#~ msgid "Not installed"
+#~ msgstr "Ikke installeret"
+
+#~ msgid "Nothing to process"
+#~ msgstr "Intet at gøre"
+
+#~ msgid "Origin:"
+#~ msgstr "Oprindelse:"
+
+#~ msgid "Package"
+#~ msgstr "Pakke"
+
+#~ msgid "Package size:"
+#~ msgstr "Pakkestørrelse:"
+
+#~ msgid "Packages"
+#~ msgstr "Pakker"
+
+#~ msgid "Patches"
+#~ msgstr "Programrettelser"
+
+#~ msgid "Processing packages ..."
+#~ msgstr "Bearbejder pakker ..."
+
+#~ msgid "Provided libraries"
+#~ msgstr "Inkluderede biblioteker"
+
+#~ msgid "Real time log viewer"
+#~ msgstr "Realtid log fremviser"
+
+#~ msgid "Refreshing database"
+#~ msgstr "Opfrisker database"
+
+#~ msgid "Removable packages:"
+#~ msgstr "Sletbare pakker:"
+
+#~ msgid "Removing"
+#~ msgstr "Fjerner"
+
+#~ msgid "Report"
+#~ msgstr "Rapport"
+
+#~ msgid "Required packages (WARNING!):"
+#~ msgstr "Nødvendige pakker (ADVARSEL!):"
+
+#~ msgid "Rollback to"
+#~ msgstr "Rul tilbage til"
+
+#~ msgid "Runtime libraries"
+#~ msgstr "Runtime biblioteker"
+
+#~ msgid "Search a pattern through packages descriptions"
+#~ msgstr "Søg efter et mønster igennem pakkebeskrivelserne"
+
+#~ msgid "Search for .new configuration files to be activated"
+#~ msgstr "Søg efter .new konfigurationsfiler for aktivering"
+
+#~ msgid "Select"
+#~ msgstr "Vælg"
+
+#~ msgid "Select all updated packages"
+#~ msgstr "Vælg alle opdaterede pakker"
+
+#~ msgid "Select updates"
+#~ msgstr "Vælg opdateringer"
+
+#~ msgid "Selected packages install size:"
+#~ msgstr "Valgte pakkers installationsstørrelse:"
+
+#~ msgid "Selected packages size:"
+#~ msgstr "Valgte pakkers størrelse:"
+
+#~ msgid "Show all installed packages"
+#~ msgstr "Vis alle installerede pakker"
+
+#~ msgid "Show installed packages that have either been updated or downgraded"
+#~ msgstr ""
+#~ "Vis installerede pakker, som enten er blevet opdateret eller nedgraderet"
+
+#~ msgid "Show logs"
+#~ msgstr "Vis log"
+
+#~ msgid "Skipping"
+#~ msgstr "Skipper"
+
+#~ msgid "Successfully installed:"
+#~ msgstr "Succesfuldt installeret:"
+
+#~ msgid "System"
+#~ msgstr "System"
+
+#~ msgid "Total packages install size:"
+#~ msgstr "Pakkers totale installationsstørrelse:"
+
+#~ msgid "Total packages size:"
+#~ msgstr "Pakkers totale størrelse:"
+
+#~ msgid "Uninstall"
+#~ msgstr "Afinstaller"
+
+#~ msgid "Uninstall actions"
+#~ msgstr "Handlinger for afinstallation"
+
+#~ msgid "Uninstall packages"
+#~ msgstr "Afinstaller pakker"
+
+#~ msgid "Uninstalled packages:"
+#~ msgstr "Afinstallerede pakker:"
+
+#~ msgid "Unselect"
+#~ msgstr "Fravælg"
+
+#~ msgid "Unselect all"
+#~ msgstr "Fravælg alle"
+
+#~ msgid "Unselect all previously selected packages"
+#~ msgstr "Fravælg alle tidligere valgte pakker"
+
+#~ msgid "Updating"
+#~ msgstr "Opdaterer"
+
+#~ msgid "Welcome to Netpkg !"
+#~ msgstr "Velkommen til Netpkg!"
+
+#~ msgid "Whitelist"
+#~ msgstr "Hvidliste"
+
+#~ msgid "Xorg"
+#~ msgstr "Xorg"
+
+#~ msgid "You are about to remove all cached packages, are you sure ?"
+#~ msgstr "De er ved at fjerne alle cachede pakker, er du sikker?"
+
+#~ msgid "on"
+#~ msgstr "op"
+
+#~ msgid "Activate the following config files"
+#~ msgstr "Aktiver følgende konfigurationsfiler"
+
+#~ msgid "Filters"
+#~ msgstr "Filtre"
+
+#~ msgid "Install process result"
+#~ msgstr "Resultat af installationproces"
+
+#~ msgid "Really clean local cache ?"
+#~ msgstr "Vil du virkelig rense lokal cache?"
+
+#~ msgid "Search"
+#~ msgstr "Søg"
+
+#~ msgid "Uninstall process result"
+#~ msgstr "Resultat af afinstallaionsprocessen"
+
+#~ msgid "Building package tree"
+#~ msgstr "Bygger pakketræ"
+
+#~ msgid ""
+#~ "Database loaded from cache, please reload the mirror before installing "
+#~ "packages"
+#~ msgstr ""
+#~ "Database indlæst fra cachelager, genindlæs spejling før installering af "
+#~ "pakker"
+
+#~ msgid "Load or reload mirror content"
+#~ msgstr "Indlæs eller genindlæs indhold af spejling"
+
+#~ msgid "Reload mirror"
+#~ msgstr "Genindlæs spejling"
+
+#~ msgid ""
+#~ "Show new packages, which are available on the mirror and not installed yet"
+#~ msgstr ""
+#~ "Vis nye pakker, der ikke er installerede endnu og som er tilgængelige på "
+#~ "spejlingen"
+
+#~ msgid "No database loaded, please choose a mirror and load it"
+#~ msgstr "Ingen databse indlæst, venligst vælg en spejling og indlæs det"
+
+#~ msgid "Available"
+#~ msgstr "Tilgængelig"
+
+#~ msgid "Compute dependencies and then install/upgrade selected packages"
+#~ msgstr "Beregn afhængigheder og installer/opgrader de valgte pakker"
+
+#~ msgid "Compute dependencies and then uninstall selected packages"
+#~ msgstr "Beregn afhængigheder og afinstaller de valgte pakker"
+
+#~ msgid "Include deps"
+#~ msgstr "Inkluder afhængigheder"
+
+#~ msgid "Include orphan deps"
+#~ msgstr "Inkluder forældreløse afhængigheder"
+
+#~ msgid ""
+#~ "Install button : Compute dependencies and then install/upgrade selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Installationsknap: Beregn afhængigheder og installer/opgrader devalgte "
+#~ "pakker"
+
+#~ msgid "Installed dependencies:"
+#~ msgstr "Installerede afhængigheder:"
+
+#~ msgid "Installed packages that require"
+#~ msgstr "Installerede pakker som kræver"
+
+#~ msgid "Missing dependencies packages install size:"
+#~ msgstr "Pakkers installationsstørrelse for manglende afhængigheder:"
+
+#~ msgid "Missing dependencies packages size:"
+#~ msgstr "Pakkers størrelse for manglende afhængigheder:"
+
+#~ msgid "Missing or updated dependencies:"
+#~ msgstr "Manglende eller opdaterede afhængigheder:"
+
+#~ msgid "Orphan dependencies:"
+#~ msgstr "Forældreløse afhængigheder"
+
+#~ msgid ""
+#~ "Uninstall button : Compute dependencies and then uninstall selected "
+#~ "packages"
+#~ msgstr ""
+#~ "Afinstallationsknap: Beregn afhængigheder og afinstaller valgte pakker"
+
+#~ msgid "not installed"
+#~ msgstr "ikke installeret"
+
+#~ msgid "Orphans"
+#~ msgstr "Forældreløse"
+
+#~ msgid "Show all packages, or just standard packages"
+#~ msgstr "Vis alle pakker, eller kun standard pakker"
+
+#~ msgid "Show extra packages"
+#~ msgstr "Vis extra pakker"
+
+#~ msgid ""
+#~ "Show installed packages that are not required by any other installed "
+#~ "package"
+#~ msgstr ""
+#~ "Vis installerede pakker, som ikke kræves af andre installerede pakker"
+
+#~ msgid "Connecting to mirror"
+#~ msgstr "Forbinder til spejling"
+
+#~ msgid "Creating database"
+#~ msgstr "Opretter database"
+
+#~ msgid "mirror metadata"
+#~ msgstr "Spejlings metadata"
+
+#~ msgid ""
+#~ "Enter the URL to mirror or choose one from the history. Mirrors which "
+#~ "have been loaded properly will be auto-saved in the history"
+#~ msgstr ""
+#~ "Skriv URL til spejling eller vælg fra historik. Spejlinger der er indlæst "
+#~ "korrekt, er auto-gemt i historik."
+
+#~ msgid "Local"
+#~ msgstr "Lokal"
+
+#~ msgid "Location:"
+#~ msgstr "Sted:"
+
+#~ msgid "Checklist Mode : only show selected packages and related information"
+#~ msgstr "Checklist Modus : vis kun valgte pakker og relateret information"
+
+#~ msgid "Actions"
+#~ msgstr "Handlinger"
+
+#~ msgid "Selected packages:"
+#~ msgstr "Valgte pakker:"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Available version"
+#~ msgstr "Tilgængelig version"
+
+#~ msgid "Information"
+#~ msgstr "Information"
+
+#~ msgid "Processing packages & deps ..."
+#~ msgstr "Behandler pakker & afhængigheder ..."
+
+#~ msgid "Removing packages ..."
+#~ msgstr "Fjerner pakker ..."
+
+#~ msgid ""
+#~ "Compute dependencies and launch the action window on selected packages to "
+#~ "install / reinstall / upgrade / uninstall"
+#~ msgstr ""
+#~ "Kontrollerer afhængigheder og kør handlingsvidue på valgte pakker for at "
+#~ "installere / geninstallere / opgradere / afinstallere"
+
+#~ msgid "Install available"
+#~ msgstr "Installer tilgængelige"
+
+#~ msgid "Reload mirror content"
+#~ msgstr "Genindlæs indhold af spejling"
+
+#~ msgid "Remove installed"
+#~ msgstr "Fjern installeret"
+
+#~ msgid "Downgrades"
+#~ msgstr "Nedgrader"
+
+#~ msgid "New"
+#~ msgstr "Ny"
+
+#~ msgid "Show already installed packages"
+#~ msgstr "Vis pakker allerede installeret"
+
+#~ msgid "Show packages from mirror that are not installed yet"
+#~ msgstr "Vis pakker fra spejling som ikke er installeret"
+
+#~ msgid ""
+#~ "Show packages from mirror with higher version than the installed version"
+#~ msgstr ""
+#~ "Vis pakker fra spejling med højere versionsnummer end installerede "
+#~ "versioner"
+
+#~ msgid ""
+#~ "Show packages from mirror with lower version than the installed version"
+#~ msgstr ""
+#~ "Vis pakker fra spejling med lavere versionsnummer end installerede "
+#~ "versioner"
+
+#~ msgid "Updates"
+#~ msgstr "Opdateringer"
+
+#~ msgid "Applications"
+#~ msgstr "Programmer"
+
+#~ msgid "Libraries"
+#~ msgstr "Biblioteker"
+
+#~ msgid "Selection"
+#~ msgstr "Udvalgt"
+
+#~ msgid "Xwindow"
+#~ msgstr "Xwindow"
