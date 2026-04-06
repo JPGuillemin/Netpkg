@@ -1065,7 +1065,7 @@ if [[ "$1" ]]; then
     'install' | '-i')
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
-      export filter='URD'
+      export filter='IURD'
       CheckDbAge
       Protect
       echo "Searching $* ..."
