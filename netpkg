@@ -163,12 +163,6 @@ InstallKernel(){
   fi
 }
 
-# The main list <available> | <installed>
-#BuildGlobalPkgsDb(){
-  #rm -f $NetpkgDir/RemotePkgs.db
-  #listbuilder -a $NetpkgDir/RemotePkgs.db -i $NetpkgDir/LocalPkgs.db | sort > $NetpkgDir/GlobalPkgs.db
-#}
-
 # Download and process the meta file
 FetchRemotes(){
 
@@ -267,9 +261,6 @@ FetchRemotes(){
 
   echo 'Creating local packages list'
   BuildLocalPkgsDb
-
-  # echo 'Computing packages status'
-  # BuildGlobalPkgsDb
 
   # Generating a report
   echo -e 'Synchronization successful'
@@ -437,7 +428,7 @@ ExplodePkgInfo() {
   location=$(GetLocationForPkg $package)
   RemoteURI="$(echo -n $location | cut -d'/' -f3)"
   if [[ "$RemoteURI" == "local" ]]; then
-    RemotePkg="no remote"
+    RemotePkg="-----"
   else
     RemotePkg="$package"
     RemotePkgDotDot="" ; [[ ${#package} -gt 30 ]] && RemotePkgDotDot=".."
@@ -450,10 +441,10 @@ ListPkg() {
   rm -f $NetpkgDir/.BUFFER1 2>/dev/null
 
   for pattern in $* ; do
-    if [[ -n "$(echo "$filter" | grep 'U')" ]] || [[ -n "$(echo "$filter" | grep 'D')" ]] || [[ -n "$(echo "$filter" | grep 'R')" ]]; then
+    if [[ -n "$(echo "$PkgStatus" | grep 'U')" || -n "$(echo "$PkgStatus" | grep 'D')" || -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
       GetRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
-    if [[ -n "$(echo "$filter" | grep 'I')" ]]; then
+    if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
       GetLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
   done
@@ -465,12 +456,10 @@ ListPkg() {
 
     ExplodePkgInfo
 
-    [[ -n "$(echo "$filter" | grep 'UU')" && ! "$LocalPkg" ]] && continue
-
     # it's installed
     if [[ -n "$LocalPkg" ]]; then
       if [[ "$LocalPkg" == "$package" ]]; then
-        if [[ -n "$(echo "$filter" | grep 'I')" ]]; then
+        if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
           echo -ne "${BOLDBLUE}I${COLOR_RESET} "
             printf "%-24s %-16s %-16s %-22s %-32s\n" \
             "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
@@ -478,7 +467,7 @@ ListPkg() {
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
-        if [[ -n "$(echo "$filter" | grep 'U')" ]]; then
+        if [[ -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
           echo -ne "${BOLDRED}U${COLOR_RESET} "
             printf "%-24s %-16s %-16s %-22s %-32s\n" \
             "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
@@ -487,7 +476,7 @@ ListPkg() {
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" ]]; then
       echo $package | grep "netpkg" && echo $LocalPkg
-        if [[ -n "$(echo "$filter" | grep 'D')" ]]; then
+        if [[ -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
           echo -ne "${BOLDYELLOW}D${COLOR_RESET} "
             printf "%-24s %-16s %-16s %-22s %-32s\n" \
             "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
@@ -497,7 +486,7 @@ ListPkg() {
       fi
     # not installed
     else
-      if [[ -n "$(echo "$filter" | grep 'R')" ]]; then
+      if [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
         echo -ne "${BOLDCYAN}R${COLOR_RESET} "
             printf "%-24s %-16s %-16s %-22s %-32s\n" \
             "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
@@ -518,10 +507,10 @@ SearchAndPrompt(){
   rm -f $NetpkgDir/.BUFFER2 2>/dev/null
 
   for pattern in $* ; do
-    if [[ -n "$(echo "$filter" | grep 'U')" ]] || [[ -n "$(echo "$filter" | grep 'D')" ]] || [[ -n "$(echo "$filter" | grep 'R')" ]]; then
+    if [[ -n "$(echo "$PkgStatus" | grep 'U')" || -n "$(echo "$PkgStatus" | grep 'D')" || -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
       GetRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
-    if [[ -n "$(echo "$filter" | grep 'I')" ]] || [[ -n "$(echo "$filter" | grep 'X')" ]]; then
+    if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]] || [[ -n "$(echo "$PkgStatus" | grep 'X')" ]]; then
       GetLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
   done
@@ -542,14 +531,15 @@ SearchAndPrompt(){
     # it's installed
     if [[ -n "$LocalPkg" ]]; then
       if [[ "$LocalPkg" == "$package" ]] ; then
-        if [[ -n "$(echo "$filter" | grep 'I')" ]]; then
+        [[ -n "$(echo "$RemoteURI" | grep 'local')" && -n "$(echo "$PkgStatus" | grep 'U')" ]] && continue
+        if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
           tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
           echo -ne "${BOLDBLUE}I${COLOR_RESET} "
           printf "%-34s %-34s %-22s\n" \
           "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
           echo "(${Desc:0:50}..)"
           actionlist='reinstall skip exit download remove'
-        elif [[ -n "$(echo "$filter" | grep 'X')" ]]; then
+        elif [[ -n "$(echo "$PkgStatus" | grep 'X')" ]]; then
           tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
           echo -ne "${BOLDBLUE}I${COLOR_RESET} "
           printf "%-34s %-34s %-22s\n" \
@@ -560,7 +550,7 @@ SearchAndPrompt(){
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
-        if [[ -n "$(echo "$filter" | grep 'U')" ]]; then
+        if [[ -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
           tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
           echo -ne "${BOLDRED}U${COLOR_RESET} "
           printf "%-34s %-34s %-22s\n" \
@@ -571,7 +561,7 @@ SearchAndPrompt(){
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" ]]; then
-        if [[ -n "$(echo "$filter" | grep 'D')" ]]; then
+        if [[ -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
           tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
           echo -ne "${BOLDYELLOW}D${COLOR_RESET} "
           printf "%-34s %-34s %-22s\n" \
@@ -585,7 +575,7 @@ SearchAndPrompt(){
     # not installed
     else
       LocalPkg="not installed"
-      if [[ -n "$(echo "$filter" | grep 'R')" ]]; then
+      if [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
         tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
         echo -ne "${BOLDCYAN}R${COLOR_RESET} "
         printf "%-34s %-34s %-22s\n" \
@@ -821,10 +811,16 @@ UpdateAll() {
 
       elif [[ -n "$LocalPkg" ]]; then
 
-        if [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
+        if [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" && -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
+          # If we reached this point then this package needs to be upgraded
+          finallist="${finallist} $package"
+        elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" && -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
           # If we reached this point then this package needs to be upgraded
           finallist="${finallist} $package"
         fi
+      elif [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
+        # If we reached this point then this package needs to be upgraded
+        finallist="${finallist} $package"
       fi
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
   done
@@ -1042,7 +1038,7 @@ if [[ "$1" ]]; then
     'update' | 'remotes-reload' | 'reload' | '-rr' | '-rs' | '-u' |'refresh' | 'fetch')
       Protect
       FetchRemotes
-      export filter='UUD'
+      export PkgStatus='UD'
       shift
       ListPkg ""
       UnProtect
@@ -1050,8 +1046,7 @@ if [[ "$1" ]]; then
       ;;
     'upgrade' | '-uu' | 'update-all' | 'dist-upgrade')
       Protect
-      FetchRemotes
-      export filter='UD'
+      export PkgStatus='U'
       shift
       echo 'Searching for updates ...'
       export prompt='yes'
@@ -1065,7 +1060,7 @@ if [[ "$1" ]]; then
     'install' | '-i')
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
-      export filter='IURD'
+      export PkgStatus='IURD'
       CheckDbAge
       Protect
       echo "Searching $* ..."
@@ -1078,7 +1073,7 @@ if [[ "$1" ]]; then
     'remove' | '-r')
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
-      export filter='X'
+      export PkgStatus='X'
       Protect
       echo "Searching $* ..."
       SearchAndPrompt $*
@@ -1089,7 +1084,7 @@ if [[ "$1" ]]; then
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
       echo "Searching $* ..."
-      export filter='IURD'
+      export PkgStatus='IURD'
       ListPkg $*
       exit 0
       ;;
@@ -1099,9 +1094,9 @@ if [[ "$1" ]]; then
       exit 0
       ;;
     *)
-      export filter='IURD'
+      export PkgStatus='IURD'
       echo "Searching $* ..."
-      export filter='IURD'
+      export PkgStatus='IURD'
       ListPkg $*
       exit 0
     esac
