@@ -799,28 +799,27 @@ UpdateAll() {
 
   for package in $(cat $NetpkgDir/.BUFFER1 2>/dev/null) ; do
 
-      # the software name
-      ShortName="$(GetShortNameFromPkg $package)"
+      ExplodePkgInfo
 
-      # do we have this package installed in ANY version ?
-      LocalPkg="$(GetLocalPkgByShortName $ShortName)"
-
-      if [[ -e $packagelogs/${package%.*} ]]; then
+      if [[ "$LocalPkg" == "$package" ]]; then
         [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         continue
 
       elif [[ -n "$LocalPkg" ]]; then
 
         if [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" && -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
-          # If we reached this point then this package needs to be upgraded
+          echo "Found updated $package"
           finallist="${finallist} $package"
         elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" && -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
-          # If we reached this point then this package needs to be upgraded
+          echo "Found downgraded $package"
           finallist="${finallist} $package"
         fi
       elif [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-        # If we reached this point then this package needs to be upgraded
-        finallist="${finallist} $package"
+        category=${location##*/}
+        if [[ "$category" == "l" || "$category" == "a" || "$category" == "z" ]]; then
+          echo "Found missing $package"
+          finallist="${finallist} $package"
+        fi
       fi
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
   done
@@ -1046,10 +1045,13 @@ if [[ "$1" ]]; then
       ;;
     'upgrade' | '-uu' | 'update-all' | 'dist-upgrade')
       Protect
-      export PkgStatus='U'
       shift
-      echo 'Searching for updates ...'
       export prompt='yes'
+      echo 'Searching for updates ...'
+      export PkgStatus='U'
+      UpdateAll
+      echo 'Searching for missings ...'
+      export PkgStatus='R'
       UpdateAll
       export prompt='no'
       UnProtect
