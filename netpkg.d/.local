@@ -1,2 +1,0 @@
-URL = file:////var/packages
-Black_list = aaa_base kernel-huge kernel-modules glibc 
