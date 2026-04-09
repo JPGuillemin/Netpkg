@@ -2,7 +2,7 @@
 Version=1.0
 Name=Nepkg update
 Comment=check all package sources
-Exec=netpkg -uu
+Exec=netpkg -u && netpkg -uu
 Icon=netpkg
 Terminal=true
 Type=Application

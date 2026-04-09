@@ -794,6 +794,7 @@ DownloadAll() {
 UpdateAll() {
 
   rm -f $NetpkgDir/.BUFFER1 2>/dev/null
+  finallist=""
 
   GetRemotePkgs > $NetpkgDir/.BUFFER1
 
@@ -1035,15 +1036,27 @@ CheckDbAge() {
 if [[ "$1" ]]; then
   case "$1" in
     'update' | 'remotes-reload' | 'reload' | '-rr' | '-rs' | '-u' |'refresh' | 'fetch')
-      Protect
       FetchRemotes
-      export PkgStatus='UD'
-      shift
-      ListPkg ""
-      UnProtect
       exit 0
       ;;
-    'upgrade' | '-uu' | 'update-all' | 'dist-upgrade')
+    'upgrade')
+      Protect
+      shift
+      export prompt='yes'
+      echo 'Searching for updates ...'
+      export PkgStatus='U'
+      UpdateAll
+      echo 'Searching for missings ...'
+      export PkgStatus='R'
+      UpdateAll
+      export prompt='no'
+      UnProtect
+      CheckDotNew
+      InstallKernel
+      exit 0
+      ;;
+    'upgrade-all' | '-uu' | 'update-all')
+      FetchRemotes
       Protect
       shift
       export prompt='yes'
