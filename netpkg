@@ -69,7 +69,7 @@ else
 fi
 
 # Get Host part of URL $1
-GetHostFromURL(){
+getHostFromURL(){
 
 ## Remove protocol part of URL  ##
     HOST="${1#http://}"
@@ -94,41 +94,41 @@ mill[0]="|" ; mill[16]="/" ; mill[32]="-" ; mill[48]="\\"
 
 
 # Enable deps in netpkg.conf
-EnableDependencies(){
+function enableDependencies(){
 
   sed -i "s|.*Handle_dependencies.*|Handle_dependencies = yes|" $configfile
   echo -e "${BOLDWHITE}Dependency processing${COLOR_RESET} has been ${BOLDGREEN}enabled${COLOR_RESET}"
 }
 
 # Disable deps in netpkg.conf
-DisableDependencies(){
+function disableDependencies(){
 
   sed -i "s|.*Handle_dependencies.*|Handle_dependencies = no|" $configfile
   echo -e "${BOLDWHITE}Dependency processing${COLOR_RESET} has been ${BOLDRED}disabled${COLOR_RESET}"
 }
 
 # fetch the packages list for available packages
-GetRemotePkgs(){
+function getRemotePkgs(){
   cut -d " " -f2 $NetpkgDir/RemotePkgs.db
 }
 
-GetLocalPkgs(){
+function getLocalPkgs(){
   cat $NetpkgDir/LocalPkgs.db | sort
 }
 
 # fetch the packages list for package named $1
-GetPkgFromShortName(){
+function getPkgFromShortName(){
   cut -d " " -f2 $NetpkgDir/RemotePkgs.db | sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p"
 }
 
 # The uniq name for pkg
-GetShortNameFromPkg(){
+function getShortNameFromPkg(){
   ShortName=${1%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
   echo -n "$ShortName"
 }
 
 # Get the location for package $1
-GetLocationForPkg(){
+function getLocationForPkg(){
   location="$(sed -n "s/^\([^ \t]*\)[[ \t]*$1[[ \t]*$/\1/p" $NetpkgDir/RemotePkgs.db)"
   if [[ "$location" ]] ; then
     echo -n "$location"
@@ -137,7 +137,7 @@ GetLocationForPkg(){
   fi
 }
 
-GetSourceForPkg(){
+function getSourceForPkg(){
   source="$(sed -n "s/^\([^ \t]*\)[[ \t]*$1[[ \t]*$/\1/p" $NetpkgDir/RemotePkgs.db | cut -d"/" -f3)"
   if [[ "$source" ]] ; then
     echo -n "$source"
@@ -147,7 +147,7 @@ GetSourceForPkg(){
 }
 
 # Build a list of installed packages
-BuildLocalPkgsDb(){
+function buildLocalPkgsDb(){
   rm -f $NetpkgDir/LocalPkgs.db
   for meta in $(ls $packagelogs) ; do
     # package="$(sed -n 's/^[[ \t]*PACKAGE LOCATION:[[ \t]*\(.*\)[[ \t]*$/\1/p' $packagelogs/$meta)"
@@ -156,7 +156,7 @@ BuildLocalPkgsDb(){
   done
 }
 
-InstallKernel(){
+function installKernel(){
   if [[ -x /usr/sbin/install-kernel.sh ]]; then
     echo "Checking for new kernel to install ... "
     /usr/sbin/install-kernel.sh
@@ -164,7 +164,7 @@ InstallKernel(){
 }
 
 # Download and process the meta file
-FetchRemotes(){
+function fetchRemotes(){
 
   if [[ "$source" != 'local' ]] ; then
     echo 'Cleaning cache'
@@ -180,7 +180,7 @@ FetchRemotes(){
       mv $NetpkgDir/RemotePkgs.db.$source $NetpkgDir/OldRemotePkgs.db.$source 2>/dev/null
       mv $NetpkgDir/RemoteDeps.db.$source $NetpkgDir/OldRemoteDeps.db.$source 2>/dev/null
 
-      RemoteURL="$(GetRemoteURL $source)"
+      RemoteURL="$(getRemoteURL $source)"
 
       echo -e "Connecting to $source..."
       neterror=$($WGET -O $NetpkgDir/$source.TXT.gz $RemoteURL/PACKAGES.TXT.gz 2>&1 | grep -E 'failed:|Not Found')
@@ -219,7 +219,7 @@ FetchRemotes(){
 
       # Filter out blacklisted packages
       echo 'Filtering out blacklisted packages'
-      blacklist="$(GetRemoteBlacklist $source)"
+      blacklist="$(getRemoteBlacklist $source)"
       for pkg in $blacklist ; do
         grep -v -e "^PACKAGE NAME: *$pkg *" $NetpkgDir/$source.TXT > $NetpkgDir/.BUFFER1
         cat $NetpkgDir/.BUFFER1 > $NetpkgDir/$source.TXT
@@ -260,7 +260,7 @@ FetchRemotes(){
   fi
 
   echo 'Creating local packages list'
-  BuildLocalPkgsDb
+  buildLocalPkgsDb
 
   # Generating a report
   echo -e 'Synchronization successful'
@@ -273,25 +273,25 @@ FetchRemotes(){
 }
 
 # get URL for source $1
-GetRemoteURL(){
+function getRemoteURL(){
   sed -n 's/^[[ \t]*URL[[ \t]*=[[ \t]*\(.*\)$/\1/p' $RemotesDir/$1
 }
 
 # get Blacklist for source $1
-GetRemoteBlacklist(){
+function getRemoteBlacklist(){
     sed -n 's/^[[ \t]*Black_list[[ \t]*=[[ \t]*\(.*\)$/\1/p' $RemotesDir/$1
 }
 
 # take a look at local packages list to see which version of the $1 package installed
-GetLocalPkgByShortName(){
+function getLocalPkgByShortName(){
   sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $NetpkgDir/LocalPkgs.db
 }
 
 # Download ($package)
-DownloadPkg(){
+function downloadPkg(){
   for package in $* ; do
 
-    location=$(GetLocationForPkg $package)
+    location=$(getLocationForPkg $package)
 
     if [[ -e $LocalPkgDir/$package && \
     "$(md5sum $LocalPkgDir/$package | cut -d" " -f1)" == "$(cut -d" " -f1 $LocalPkgDir/${package%.*}.md5)" ]]; then
@@ -307,13 +307,13 @@ DownloadPkg(){
         echo "Unable to download  $location/$package"
         return 1
       fi
-      grep "/$package$" "$NetpkgDir/$(GetSourceForPkg $package).md5" > $LocalPkgDir/${package%.*}.md5
+      grep "/$package$" "$NetpkgDir/$(getSourceForPkg $package).md5" > $LocalPkgDir/${package%.*}.md5
         fi
   done
 }
 
 # Checks for configuration files to update.
-CheckDotNew(){
+function checkDotNew(){
   actionlist='yes skip diff remove exit'
   echo 'Checking for configuration files to update...'
   dotnewlist="$(find /etc -name "*.new")"
@@ -355,7 +355,7 @@ CheckDotNew(){
 
 
 # Disable source
-DisableRemote(){
+function disableRemote(){
 
   if [[ "$sourceslist" ]] ; then
     echo 'Which remote do you want to disable? :'
@@ -371,7 +371,7 @@ DisableRemote(){
 }
 
 # Enable remote
-EnableRemote(){
+function enableRemote(){
 
   disabledsourceslist=$(ls -d $RemotesDir/.??* | sed -e "s|$RemotesDir/\(.*\)|\1|" )
 
@@ -387,16 +387,16 @@ EnableRemote(){
 }
 
 # Add remote for URL "$1"
-AddRemote(){
+function addRemote(){
 
-  source="$(GetHostFromURL $1)"
+  source="$(getHostFromURL $1)"
   if [[ "$1" ]] ; then
     if [[ -e $RemotesDir/$source ]]; then
       echo -e "${BOLDWHITE}$source already exists in $RemotesDir ${COLOR_RESET}"
     elif [[ ! "$(echo $1 | egrep 'http://|ftp://|https://')" ]] ; then
       echo -e "${BOLDWHITE}Bad syntax in URL $1 ${COLOR_RESET}"
     else
-      source="$(GetHostFromURL $1)"
+      source="$(getHostFromURL $1)"
       echo "URL = $1" > $RemotesDir/$source
       echo "Black_list = " >> $RemotesDir/$source
       # sourcehash="$(echo "$2" | md5sum | cut -d " " -f 1)"
@@ -406,79 +406,77 @@ AddRemote(){
     echo 'you forgot the URL... ;)'
     exit
   fi
-
-
 }
 
+function printPkgList(){
+  local status=$1
+  local color=$2
 
-ExplodePkgInfo() {
   # Get package details
   ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
   ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
-  LocalPkg="$(GetLocalPkgByShortName $ShortName)"
+  LocalPkg="$(getLocalPkgByShortName $ShortName)"
   LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
-  # LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
-  # LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
+  LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
+  LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
   BuildVersion=${package%.*}; BuildVersion=${BuildVersion##*-}
   BuildVersionDotDot="" ; [[ ${#BuildVersion} -gt 10 ]] && BuildVersionDotDot=".."
   Version=${package%-*}; Version=${Version%-*}; Version=${Version##*-}
   VersionDotDot="" ; [[ ${#Version} -gt 10 ]] && VersionDotDot=".."
   Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
   [[ ${#Desc} -lt 1 ]] && Desc="$ShortName package for Slackware & Zenwalk"
-  location=$(GetLocationForPkg $package)
+  location=$(getLocationForPkg $package)
   RemoteURI="$(echo -n $location | cut -d'/' -f3)"
-  if [[ "$RemoteURI" == "local" ]]; then
-    RemotePkg="-----"
-  else
-    RemotePkg="$package"
-    RemotePkgDotDot="" ; [[ ${#package} -gt 30 ]] && RemotePkgDotDot=".."
-  fi
+
+  echo -ne "${color}${status}${COLOR_RESET} "
+    printf "%-24s %-16s %-16s %-22s %-32s\n" \
+    "${ShortName:0:20}$ShortNameDotDot" \
+    "${Version:0:14}$VersionDotDot" \
+    "${BuildVersion:0:14}$BuildVersionDotDot" \
+    "${RemoteURI:0:18}.." \
+    "${Desc:0:30}.."
+
 }
 
 # list packages from Remote #########################
-ListPkg() {
+function listPkg() {
 
   truncate -s0 $NetpkgDir/.BUFFER1
   for pattern in $* ; do
     if [[ -n "$(echo "$PkgStatus" | grep 'U')" || -n "$(echo "$PkgStatus" | grep 'D')" || -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-      GetRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
+      getRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
     if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
-      GetLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
+      getLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
   done
+
+  ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+  LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
   tput bold ; printf "%-26s %-16s %-16s %-22s %-5s\n" "  Name" "Version" "Build" "Remote" "Info" ; tput sgr0
 
   for package in $(sort $NetpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
-    ExplodePkgInfo
-
     # it's installed
     if [[ -n "$LocalPkg" ]]; then
       if [[ "$LocalPkg" == "$package" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
-          echo -ne "${BOLDBLUE}I${COLOR_RESET} "
-            printf "%-24s %-16s %-16s %-22s %-32s\n" \
-            "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
+          printPkgList "I" ${BOLDBLUE}
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
-          echo -ne "${BOLDRED}U${COLOR_RESET} "
-            printf "%-24s %-16s %-16s %-22s %-32s\n" \
-            "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
+          printPkgList "U" ${BOLDRED}
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" ]]; then
       echo $package | grep "netpkg" && echo $LocalPkg
         if [[ -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
-          echo -ne "${BOLDYELLOW}D${COLOR_RESET} "
-            printf "%-24s %-16s %-16s %-22s %-32s\n" \
-            "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
+          printPkgList "D" ${BOLDYELLOW}
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
@@ -486,9 +484,7 @@ ListPkg() {
     # not installed
     else
       if [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-        echo -ne "${BOLDCYAN}R${COLOR_RESET} "
-            printf "%-24s %-16s %-16s %-22s %-32s\n" \
-            "${ShortName:0:20}$ShortNameDotDot" "${Version:0:14}$VersionDotDot" "${BuildVersion:0:14}$BuildVersionDotDot" "${RemoteURI:0:18}.." "${Desc:0:30}.."
+        printPkgList "R" ${BOLDCYAN}
       else
         [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
       fi
@@ -499,22 +495,59 @@ ListPkg() {
   echo 'Search done.'
 }
 
+function printSearchResult(){
+  local status=$1
+  local color=$2
+
+  # Get package details
+  ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+  ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
+  LocalPkg="$(getLocalPkgByShortName $ShortName)"
+  LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
+  # LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
+  # LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
+  # BuildVersion=${package%.*}; BuildVersion=${BuildVersion##*-}
+  # BuildVersionDotDot="" ; [[ ${#BuildVersion} -gt 10 ]] && BuildVersionDotDot=".."
+  # Version=${package%-*}; Version=${Version%-*}; Version=${Version##*-}
+  # VersionDotDot="" ; [[ ${#Version} -gt 10 ]] && VersionDotDot=".."
+  Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
+  [[ ${#Desc} -lt 1 ]] && Desc="$ShortName package for Slackware & Zenwalk"
+  location=$(getLocationForPkg $package)
+  RemoteURI="$(echo -n $location | cut -d'/' -f3)"
+  if [[ "$RemoteURI" == "local" ]]; then
+    RemotePkg="-----"
+  else
+    RemotePkg="$package"
+    RemotePkgDotDot="" ; [[ ${#package} -gt 30 ]] && RemotePkgDotDot=".."
+  fi
+
+  tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
+  echo -ne "${color}${status}${COLOR_RESET} "
+  printf "%-34s %-34s %-22s\n" \
+  "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
+  echo "(${Desc:0:50}..)"
+
+}
+
 # prompt for action (install / upgrade / reinstall / download) for a list of packages ($*) #########################
-SearchAndPrompt(){
+function searchAndPrompt(){
 
   truncate -s0 $NetpkgDir/.BUFFER1
 
   for pattern in $* ; do
     if [[ -n "$(echo "$PkgStatus" | grep 'U')" || -n "$(echo "$PkgStatus" | grep 'D')" || -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-      GetRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
+      getRemotePkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
     if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]] || [[ -n "$(echo "$PkgStatus" | grep 'X')" ]]; then
-      GetLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
+      getLocalPkgs | grep "$pattern" >> $NetpkgDir/.BUFFER1
     fi
   done
 
   for package in $(sort $NetpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
-    ExplodePkgInfo
+
+    ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+    LocalPkg="$(getLocalPkgByShortName $ShortName)"
+
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
     actionlist=''
@@ -522,42 +555,26 @@ SearchAndPrompt(){
     # it's installed
     if [[ -n "$LocalPkg" ]]; then
       if [[ "$LocalPkg" == "$package" ]] ; then
-        [[ -n "$(echo "$RemoteURI" | grep 'local')" && -n "$(echo "$PkgStatus" | grep 'U')" ]] && continue
+        [[ -n "$(echo "$PkgStatus" | grep 'U')" ]] && continue
         if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
-          tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
-          echo -ne "${BOLDBLUE}I${COLOR_RESET} "
-          printf "%-34s %-34s %-22s\n" \
-          "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
-          echo "(${Desc:0:50}..)"
+          printSearchResult "I" ${BOLDBLUE}
           actionlist='reinstall skip exit download remove'
         elif [[ -n "$(echo "$PkgStatus" | grep 'X')" ]]; then
-          tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
-          echo -ne "${BOLDBLUE}I${COLOR_RESET} "
-          printf "%-34s %-34s %-22s\n" \
-          "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
-          echo "(${Desc:0:50}..)"
+          printSearchResult "I" ${BOLDBLUE}
           actionlist='remove skip exit'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
-          tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
-          echo -ne "${BOLDRED}U${COLOR_RESET} "
-          printf "%-34s %-34s %-22s\n" \
-          "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
-          echo "(${Desc:0:50}..)"
+          printSearchResult "U" ${BOLDRED}
           actionlist='install skip exit download remove'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
-          tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
-          echo -ne "${BOLDYELLOW}D${COLOR_RESET} "
-          printf "%-34s %-34s %-22s\n" \
-          "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
-          echo "(${Desc:0:50}..)"
+          printSearchResult "D" ${BOLDYELLOW}
           actionlist='install skip exit download remove'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
@@ -565,13 +582,9 @@ SearchAndPrompt(){
       fi
     # not installed
     else
-      LocalPkg="not installed"
+      LocalPkg="-----"
       if [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-        tput bold ; printf "%-36s %-34s %-7s\n" "  Installed Pkg" "Remote Pkg" "Remote"; tput sgr0
-        echo -ne "${BOLDCYAN}R${COLOR_RESET} "
-        printf "%-34s %-34s %-22s\n" \
-        "${LocalPkg:0:30}$LocalPkgDotDot" "${RemotePkg:0:30}$RemotePkgDotDot" "${RemoteURI:0:18}.."
-        echo "(${Desc:0:50}..)"
+          printSearchResult "R" ${BOLDCYAN}
         actionlist='install skip exit download'
       else
         [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
@@ -582,11 +595,11 @@ SearchAndPrompt(){
       select action in $actionlist ; do
         case $action in
           'install')
-            ProcessPkgs $package
+            processPkgs $package
             break
             ;;
           'reinstall')
-            ProcessPkgs $package
+            processPkgs $package
             break
             ;;
           'remove')
@@ -599,7 +612,7 @@ SearchAndPrompt(){
             break
             ;;
           'download')
-            DownloadPkg $package
+            downloadPkg $package
             break
             ;;
           'exit')
@@ -615,7 +628,7 @@ SearchAndPrompt(){
 
 # Check deps , then Install / Reinstall / Upgrade a list of packages
 # The full and exact package name MUST be provided
-ProcessPkgs() {
+function processPkgs() {
 
 if [[ "$*" ]]; then
 
@@ -623,12 +636,12 @@ if [[ "$*" ]]; then
   PkgNumber=0
 
   # We need an up to date list of installed packages
-  BuildLocalPkgsDb
+  buildLocalPkgsDb
 
   for package in $* ; do
 
     # the software name
-    ShortName="$(GetShortNameFromPkg $package)"
+    ShortName="$(getShortNameFromPkg $package)"
 
     finallist="${finallist} $package"
     let "PkgNumber++"
@@ -649,7 +662,7 @@ if [[ "$*" ]]; then
         [[ "$(echo $finallist | grep "$deppackage" )" ]] && continue
 
         # Do we have it installed in ANY version ? then skip
-        [[ "$(GetLocalPkgByShortName $dep)" ]] && continue
+        [[ "$(getLocalPkgByShortName $dep)" ]] && continue
 
         finallist="${finallist} $deppackage"
         let "PkgNumber++"
@@ -682,7 +695,7 @@ if [[ "$*" ]]; then
     echo -e "${BOLDWHITE}Downloading $package ($PkgCount/$PkgNumber) ...${COLOR_RESET}"
 
     # download the package if needed
-    DownloadPkg $package
+    downloadPkg $package
 
   done
 
@@ -692,18 +705,18 @@ if [[ "$*" ]]; then
     let "PkgCount++"
 
     # the software name
-    ShortName="$(GetShortNameFromPkg $package)"
+    ShortName="$(getShortNameFromPkg $package)"
 
     # do we have this package installed in ANY version ?
-    LocalPkg="$(GetLocalPkgByShortName $ShortName)"
+    LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
     # We need to find the location for $package
-    location="$(GetLocationForPkg $package)"
+    location="$(getLocationForPkg $package)"
 
     # We need to find the source for $package, as information
-    source="$(GetSourceForPkg $package)"
+    source="$(getSourceForPkg $package)"
 
-    [[ ! -e $LocalPkgDir/$package ]] && DownloadPkg $package
+    [[ ! -e $LocalPkgDir/$package ]] && downloadPkg $package
 
     if [[ "$(md5sum $LocalPkgDir/$package | cut -d" " -f1)" == "$(cut -d" " -f1 $LocalPkgDir/${package%.*}.md5)" ]]; then
       echo -e "Checksum is OK for $package :)"
@@ -739,7 +752,7 @@ if [[ "$*" ]]; then
     fi
 
     # We need an up to date list of installed packages
-    BuildLocalPkgsDb
+    buildLocalPkgsDb
 
   done
 fi
@@ -749,8 +762,8 @@ fi
 
 
 
-# DownloadAll ###############################################
-DownloadAll() {
+# downloadAll ###############################################
+function downloadAll() {
 
   if [[ "$prompt" == 'yes' ]] ; then
     prompt=''
@@ -766,11 +779,11 @@ DownloadAll() {
     done
   fi
 
-  for package in $(GetRemotePkgs) ; do
+  for package in $(getRemotePkgs) ; do
 
     if [[ "$package" ]]; then
 
-      DownloadPkg $package
+      downloadPkg $package
 
     fi
   done
@@ -780,47 +793,48 @@ DownloadAll() {
 
 
 # upgrade the whole system ###############################################
-UpdateAll() {
+function updateAll() {
 
   truncate -s0 $NetpkgDir/.BUFFER1
   finallist=""
 
-  GetRemotePkgs > $NetpkgDir/.BUFFER1
+  getRemotePkgs > $NetpkgDir/.BUFFER1
 
   for package in $(<$NetpkgDir/.BUFFER1) ; do
 
-      ExplodePkgInfo
+    ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+    LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
-      if [[ "$LocalPkg" == "$package" ]]; then
-        [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
-        continue
+    if [[ "$LocalPkg" == "$package" ]]; then
+      [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
+      continue
 
-      elif [[ -n "$LocalPkg" ]]; then
+    elif [[ -n "$LocalPkg" ]]; then
 
-        if [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" && -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
-          echo "Found updated $package"
-          finallist="${finallist} $package"
-        elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" && -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
-          echo "Found downgraded $package"
-          finallist="${finallist} $package"
-        fi
-      elif [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-        category=${location##*/}
-        if [[ "$category" == "l" || "$category" == "a" || "$category" == "z" ]]; then
-          echo "Found missing $package"
-          finallist="${finallist} $package"
-        fi
+      if [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" && -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
+        echo "Found updated $package"
+        finallist="${finallist} $package"
+      elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" && -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
+        echo "Found downgraded $package"
+        finallist="${finallist} $package"
       fi
+    elif [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
+      category=${location##*/}
+      if [[ "$category" == "l" || "$category" == "a" || "$category" == "z" ]]; then
+        echo "Found missing $package"
+        finallist="${finallist} $package"
+      fi
+    fi
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
   done
 
-  ProcessPkgs "$finallist"
+  processPkgs "$finallist"
   echo 'Search done.'
 
 }
 
 # File Protector function ######################################
-Protect() {
+function Protect() {
   # we backup all critical files as .old
   for protectedFile in $untouchable ; do
     [[ -e $protectedFile ]] && cp -f $protectedFile $protectedFile.old 2>/dev/null
@@ -833,8 +847,8 @@ Protect() {
   echo "$$" > "$NetpkgDir/.lock"
 }
 
-# File UnProtector function
-UnProtect() {
+# File unProtector function
+function unProtect() {
   rm -f "$NetpkgDir/.lock"
 # delete backuped files in case it's the same OR no newer was added
 for protectedFile in $untouchable ; do
@@ -852,9 +866,9 @@ done
 }
 
 # Final cleanup ######################################
-cleanup(){
+function cleanup(){
   # We delete unchanged Protected files or keep the old backuped one
-  UnProtect
+  unProtect
   echo -e "Bye ${BOLDRED};)${COLOR_RESET}"
   echo
   exit 0
@@ -866,10 +880,10 @@ trap 'cleanup' TERM INT EXIT
 # main( :) #########################
 
 # We always need an up to date list of installed packages
-BuildLocalPkgsDb
+buildLocalPkgsDb
 
 # Some fun :)
-baneer() {
+function baneer() {
 echo -en "${BOLDRED}"
 echo "      _  __      __         __        ";
 echo "     / |/ /___  / /_ ___   / /__ ___  ";
@@ -880,7 +894,7 @@ echo -e "${COLOR_RESET}"
 }
 # CLI howto ###############################################
 
-usage() {
+function usage() {
   echo -e "Basic usage : "
   echo -e " ${BOLDWHITE}netpkg update${COLOR_RESET}"
   echo -e " ${BOLDWHITE}netpkg upgrade${COLOR_RESET}"
@@ -890,7 +904,7 @@ usage() {
   echo -e " ${BOLDWHITE}netpkg help|-h${COLOR_RESET}"
 }
 
-uusage() {
+function uusage() {
   echo
   echo -e "Output symbols and colors : "
   echo -en "${BOLDBLUE}    [I]${COLOR_RESET}"
@@ -932,7 +946,7 @@ if [[ "$1" ]]; then
       ;;
     'mrclean' | '-mc')
       rm -f $LocalPkgDir/*z
-      FetchRemotes
+      fetchRemotes
       exit 0
       ;;
     'remotes' | 'remotes-list' | '-rl' | 'list-sources' | '-ls')
@@ -942,30 +956,30 @@ if [[ "$1" ]]; then
       exit 0
       ;;
     'dotnew' | '-z')
-      CheckDotNew
+      checkDotNew
       exit 1
       ;;
     'remote-add' | '-ra' | 'add-source' | '-as')
       shift
-      AddRemote $1
+      addRemote $1
       exit 0
       ;;
     'remote-disable' | '-rd' | 'disable-source' | '-ds')
-      DisableRemote
-      FetchRemotes
+      disableRemote
+      fetchRemotes
       exit 0
       ;;
     'remote-enable' | '-re' | 'enable-source' | '-es')
-      EnableRemote
-      FetchRemotes
+      enableRemote
+      fetchRemotes
       exit 0
       ;;
     'deps-disable' | '-dd' | 'disable-deps')
-      DisableDependencies
+      disableDependencies
       exit 0
       ;;
     'deps-enable' | '-de'| 'enable-deps' | '-ed')
-      EnableDependencies
+      enableDependencies
       exit 0
       ;;
   esac
@@ -975,7 +989,7 @@ else
   exit 1
 fi
 
-CheckDbAge() {
+checkDbAge() {
   if [[ -e $NetpkgDir/RemotePkgs.db ]] ; then
     # How old is the DB ?
     DbAge=$(stat -c %Z $NetpkgDir/RemotePkgs.db )
@@ -989,21 +1003,21 @@ CheckDbAge() {
       while read answer ; do
         case $answer in
         1)
-          FetchRemotes
+          fetchRemotes
           echo -e 'Synced with remotes'
           break
           ;;
         *)
           echo -e 'Keeping old DB :/'
-          BuildLocalPkgsDb
+          buildLocalPkgsDb
           break
         esac
       done
     else
-      BuildLocalPkgsDb
+      buildLocalPkgsDb
     fi
   else
-    FetchRemotes
+    fetchRemotes
   fi
   if [[ ! -e $NetpkgDir/RemotePkgs.db ]] ; then
     exit 1
@@ -1015,7 +1029,7 @@ CheckDbAge() {
 if [[ "$1" ]]; then
   case "$1" in
     'update' | '-u')
-      FetchRemotes
+      fetchRemotes
       exit 0
       ;;
     'upgrade' | '-U')
@@ -1024,44 +1038,44 @@ if [[ "$1" ]]; then
       export prompt='yes'
       echo 'Searching for updates ...'
       export PkgStatus='U'
-      UpdateAll
+      updateAll
       echo 'Searching for missings ...'
       export PkgStatus='R'
-      UpdateAll
+      updateAll
       export prompt='no'
-      UnProtect
-      CheckDotNew
-      InstallKernel
+      unProtect
+      checkDotNew
+      installKernel
       exit 0
       ;;
     'update&upgrade' | '-uu')
-      FetchRemotes
+      fetchRemotes
       Protect
       shift
       export prompt='yes'
       echo 'Searching for updates ...'
       export PkgStatus='U'
-      UpdateAll
+      updateAll
       echo 'Searching for missings ...'
       export PkgStatus='R'
-      UpdateAll
+      updateAll
       export prompt='no'
-      UnProtect
-      CheckDotNew
-      InstallKernel
+      unProtect
+      checkDotNew
+      installKernel
       exit 0
       ;;
     'install' | '-i')
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
       export PkgStatus='IURD'
-      CheckDbAge
+      checkDbAge
       Protect
       echo "Searching $* ..."
-      SearchAndPrompt $*
-      UnProtect
-      CheckDotNew
-      InstallKernel
+      searchAndPrompt $*
+      unProtect
+      checkDotNew
+      installKernel
       exit 0
       ;;
     'remove' | '-r')
@@ -1070,8 +1084,8 @@ if [[ "$1" ]]; then
       export PkgStatus='X'
       Protect
       echo "Searching $* ..."
-      SearchAndPrompt $*
-      UnProtect
+      searchAndPrompt $*
+      unProtect
       exit 0
       ;;
     'search' | '-s')
@@ -1079,7 +1093,7 @@ if [[ "$1" ]]; then
       shift
       echo "Searching $* ..."
       export PkgStatus='IURD'
-      ListPkg $*
+      listPkg $*
       exit 0
       ;;
     -*)
@@ -1091,7 +1105,7 @@ if [[ "$1" ]]; then
       export PkgStatus='IURD'
       echo "Searching $* ..."
       export PkgStatus='IURD'
-      ListPkg $*
+      listPkg $*
       exit 0
     esac
 else
