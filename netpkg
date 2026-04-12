@@ -314,7 +314,7 @@ function downloadPkg(){
 
 # Checks for configuration files to update.
 function checkDotNew(){
-  actionlist='yes skip diff remove exit'
+  local actionlist='yes skip diff remove exit'
   echo 'Checking for configuration files to update...'
   dotnewlist="$(find /etc -name "*.new")"
   if [[ "$dotnewlist" ]] ; then
@@ -373,7 +373,7 @@ function disableRemote(){
 # Enable remote
 function enableRemote(){
 
-  disabledsourceslist=$(ls -d $RemotesDir/.??* | sed -e "s|$RemotesDir/\(.*\)|\1|" )
+  local disabledsourceslist=$(ls -d $RemotesDir/.??* | sed -e "s|$RemotesDir/\(.*\)|\1|" )
 
   if [[ "$disabledsourceslist" ]] ; then
     echo 'Which remote do you want to enable? :'
@@ -389,7 +389,7 @@ function enableRemote(){
 # Add remote for URL "$1"
 function addRemote(){
 
-  source="$(getHostFromURL $1)"
+  local source="$(getHostFromURL $1)"
   if [[ "$1" ]] ; then
     if [[ -e $RemotesDir/$source ]]; then
       echo -e "${BOLDWHITE}$source already exists in $RemotesDir ${COLOR_RESET}"
@@ -413,20 +413,20 @@ function printPkgList(){
   local color=$2
 
   # Get package details
-  ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
-  ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
-  LocalPkg="$(getLocalPkgByShortName $ShortName)"
-  LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
-  LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
-  LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
-  BuildVersion=${package%.*}; BuildVersion=${BuildVersion##*-}
-  BuildVersionDotDot="" ; [[ ${#BuildVersion} -gt 10 ]] && BuildVersionDotDot=".."
-  Version=${package%-*}; Version=${Version%-*}; Version=${Version##*-}
-  VersionDotDot="" ; [[ ${#Version} -gt 10 ]] && VersionDotDot=".."
-  Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
+  local ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+  local ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
+  local LocalPkg="$(getLocalPkgByShortName $ShortName)"
+  local LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
+  local LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
+  local LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
+  local BuildVersion=${package%.*}; BuildVersion=${BuildVersion##*-}
+  local BuildVersionDotDot="" ; [[ ${#BuildVersion} -gt 10 ]] && BuildVersionDotDot=".."
+  local Version=${package%-*}; Version=${Version%-*}; Version=${Version##*-}
+  local VersionDotDot="" ; [[ ${#Version} -gt 10 ]] && VersionDotDot=".."
+  local Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
   [[ ${#Desc} -lt 1 ]] && Desc="$ShortName package for Slackware & Zenwalk"
-  location=$(getLocationForPkg $package)
-  RemoteURI="$(echo -n $location | cut -d'/' -f3)"
+  local location=$(getLocationForPkg $package)
+  local RemoteURI="$(echo -n $location | cut -d'/' -f3)"
 
   echo -ne "${color}${status}${COLOR_RESET} "
     printf "%-24s %-16s %-16s %-22s %-32s\n" \
@@ -451,8 +451,8 @@ function listPkg() {
     fi
   done
 
-  ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
-  LocalPkg="$(getLocalPkgByShortName $ShortName)"
+  local ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+  local LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
   tput bold ; printf "%-26s %-16s %-16s %-22s %-5s\n" "  Name" "Version" "Build" "Remote" "Info" ; tput sgr0
 
@@ -500,20 +500,14 @@ function printSearchResult(){
   local color=$2
 
   # Get package details
-  ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
-  ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
-  LocalPkg="$(getLocalPkgByShortName $ShortName)"
-  LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
-  # LocalVersion=${LocalPkg%-*}; LocalVersion=${LocalVersion%-*}; LocalVersion=${LocalVersion##*-}
-  # LocalVersionDotDot="" ; [[ ${#LocalVersion} -gt 10 ]] && LocalVersionDotDot=".."
-  # BuildVersion=${package%.*}; BuildVersion=${BuildVersion##*-}
-  # BuildVersionDotDot="" ; [[ ${#BuildVersion} -gt 10 ]] && BuildVersionDotDot=".."
-  # Version=${package%-*}; Version=${Version%-*}; Version=${Version##*-}
-  # VersionDotDot="" ; [[ ${#Version} -gt 10 ]] && VersionDotDot=".."
-  Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
+  local ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+  local ShortNameDotDot="" ; [[ ${#ShortName} -gt 20 ]] && ShortNameDotDot=".."
+  local LocalPkg="$(getLocalPkgByShortName $ShortName)"
+  local LocalPkgDotDot="" ; [[ ${#LocalPkg} -gt 30 ]] && LocalPkgDotDot=".."
+  local Desc="$(sed -n "s/$ShortName:.*(\(.*\))/\1/p" $NetpkgDir/PACKAGES.TXT  | head -n1)"
   [[ ${#Desc} -lt 1 ]] && Desc="$ShortName package for Slackware & Zenwalk"
-  location=$(getLocationForPkg $package)
-  RemoteURI="$(echo -n $location | cut -d'/' -f3)"
+  local location=$(getLocationForPkg $package)
+  local RemoteURI="$(echo -n $location | cut -d'/' -f3)"
   if [[ "$RemoteURI" == "local" ]]; then
     RemotePkg="-----"
   else
@@ -545,8 +539,8 @@ function searchAndPrompt(){
 
   for package in $(sort $NetpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
 
-    ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
-    LocalPkg="$(getLocalPkgByShortName $ShortName)"
+    local ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+    local LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
@@ -558,24 +552,24 @@ function searchAndPrompt(){
         [[ -n "$(echo "$PkgStatus" | grep 'U')" ]] && continue
         if [[ -n "$(echo "$PkgStatus" | grep 'I')" ]]; then
           printSearchResult "I" ${BOLDBLUE}
-          actionlist='reinstall skip exit download remove'
+          local actionlist='reinstall skip exit download remove'
         elif [[ -n "$(echo "$PkgStatus" | grep 'X')" ]]; then
           printSearchResult "I" ${BOLDBLUE}
-          actionlist='remove skip exit'
+          local actionlist='remove skip exit'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -u -q $package)" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'U')" ]]; then
           printSearchResult "U" ${BOLDRED}
-          actionlist='install skip exit download remove'
+          local actionlist='install skip exit download remove'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ "$(echo "x | $package | $LocalPkg" | vfilter -d -q $package)" ]]; then
         if [[ -n "$(echo "$PkgStatus" | grep 'D')" ]]; then
           printSearchResult "D" ${BOLDYELLOW}
-          actionlist='install skip exit download remove'
+          local actionlist='install skip exit download remove'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
@@ -585,7 +579,7 @@ function searchAndPrompt(){
       LocalPkg="-----"
       if [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
           printSearchResult "R" ${BOLDCYAN}
-        actionlist='install skip exit download'
+        local actionlist='install skip exit download'
       else
         [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
       fi
@@ -641,7 +635,7 @@ if [[ "$*" ]]; then
   for package in $* ; do
 
     # the software name
-    ShortName="$(getShortNameFromPkg $package)"
+    local ShortName="$(getShortNameFromPkg $package)"
 
     finallist="${finallist} $package"
     let "PkgNumber++"
@@ -802,8 +796,8 @@ function updateAll() {
 
   for package in $(<$NetpkgDir/.BUFFER1) ; do
 
-    ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
-    LocalPkg="$(getLocalPkgByShortName $ShortName)"
+    local ShortName=${package%-*}; ShortName=${ShortName%-*}; ShortName=${ShortName%-*}
+    local LocalPkg="$(getLocalPkgByShortName $ShortName)"
 
     if [[ "$LocalPkg" == "$package" ]]; then
       [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
@@ -819,7 +813,8 @@ function updateAll() {
         finallist="${finallist} $package"
       fi
     elif [[ -n "$(echo "$PkgStatus" | grep 'R')" ]]; then
-      category=${location##*/}
+      local location=$(getLocationForPkg $package)
+      local category=${location##*/}
       if [[ "$category" == "l" || "$category" == "a" || "$category" == "z" ]]; then
         echo "Found missing $package"
         finallist="${finallist} $package"
