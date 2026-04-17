@@ -1,0 +1,266 @@
+.TH NETPKG 8 "April 2026" "Netpkg 11.5" "System Administration Utilities"
+
+.SH NAME
+netpkg \- network package management tool for Zenwalk Linux
+
+.SH SYNOPSIS
+.B netpkg
+.I command
+.RI [ arguments ]
+
+.SH DESCRIPTION
+.B netpkg
+is a command line package management utility designed for
+Zenwalk Linux systems. It provides a simple interface for
+installing, upgrading, removing, and searching software
+packages from remote repositories over the network.
+
+The tool allows minimal system installations and enables
+administrators to install or update only the packages required
+for a specific system.
+
+.B netpkg
+downloads package metadata from configured remote repositories,
+compares them with installed packages, and performs the
+necessary operations using the native Slackware package tools
+such as
+.BR installpkg (8)
+and
+.BR upgradepkg (8).
+
+Dependency processing can optionally be enabled through the
+configuration file.
+
+.SH COMMANDS
+
+.TP
+.B update, -u
+Synchronize the local package database with remote repositories.
+
+.TP
+.B upgrade, -U
+Upgrade all installed packages for which newer versions exist
+in the configured repositories.
+
+.TP
+.B update&upgrade, -uu
+Perform both repository synchronization and system upgrade.
+
+.TP
+.B install, -i \fIpattern\fR
+Search for packages matching the specified pattern and prompt
+the user for installation.
+
+Multiple search patterns may be specified.
+
+.TP
+.B remove, -r \fIpattern\fR
+Search for installed packages matching the pattern and prompt
+for removal.
+
+.TP
+.B search, -s \fIpattern\fR
+Search remote and local package databases and display matching
+packages.
+
+.TP
+.B remotes, -rl
+List configured remote repositories.
+
+.TP
+.B remote-add, -ra \fIURL\fR
+Add a new remote repository using the specified URL.
+
+.TP
+.B remote-disable, -rd
+Disable an existing remote repository.
+
+.TP
+.B remote-enable, -re
+Enable a previously disabled remote repository.
+
+.TP
+.B deps-enable, -ed
+Enable dependency handling in the configuration file.
+
+.TP
+.B deps-disable, -dd
+Disable dependency handling.
+
+.TP
+.B dotnew, -z
+Scan the system for configuration files ending in
+.B .new
+and interactively prompt for merge or replacement.
+
+.TP
+.B mrclean, -mc
+Clean the local package cache directory.
+
+.TP
+.B help, -h
+Display usage information.
+
+.SH OUTPUT STATUS
+
+During searches and upgrades, packages are marked with the
+following status indicators:
+
+.TP
+.B [I]
+Installed package matches the remote version.
+
+.TP
+.B [U]
+Remote version is newer than the installed package.
+
+.TP
+.B [D]
+Remote version is older than the installed package.
+
+.TP
+.B [R]
+Package exists in remote repository but is not installed locally.
+
+.SH CONFIGURATION
+
+Configuration is stored in:
+
+.TP
+.I /etc/netpkg.conf
+
+Key options include:
+
+.TP
+.B Netpkg_dir
+Directory used for internal netpkg data.
+
+.TP
+.B Remotes_dir
+Directory containing remote repository definitions.
+
+.TP
+.B Local_repository
+Directory used to cache downloaded packages.
+
+.TP
+.B Package_logs
+Directory containing installed package metadata.
+
+.TP
+.B Handle_dependencies
+Enable or disable dependency processing.
+
+.TP
+.B Keep_packages
+Controls whether downloaded packages remain in the local cache.
+
+.TP
+.B Proxy_Socket
+Proxy configuration for network access.
+
+.SH REMOTE REPOSITORIES
+
+Remote repositories are defined as individual files located in:
+
+.TP
+.I /etc/netpkg.d/
+
+Each file must contain at least:
+
+.TP
+.B URL
+Base URL of the repository.
+
+Optional:
+
+.TP
+.B Black_list
+Packages excluded from synchronization.
+
+.SH FILES
+
+.TP
+.I /etc/netpkg.conf
+Main configuration file.
+
+.TP
+.I /etc/netpkg.d/
+Remote repository configuration directory.
+
+.TP
+.I /var/netpkg/
+Local metadata database directory.
+
+.TP
+.I /var/packages/
+Local package cache.
+
+.TP
+.I /var/log/packages/
+Installed package records.
+
+.TP
+.I /var/log/netpkg.log
+Operation log file.
+
+.SH EXIT STATUS
+
+.TP
+.B 0
+Operation completed successfully.
+
+.TP
+.B 1
+An error occurred.
+
+.SH EXAMPLES
+
+Update repository metadata:
+
+.nf
+netpkg update
+.fi
+
+Upgrade the system:
+
+.nf
+netpkg upgrade
+.fi
+
+Install a package:
+
+.nf
+netpkg install vim
+.fi
+
+Search for packages:
+
+.nf
+netpkg search python
+.fi
+
+Add a repository:
+
+.nf
+netpkg remote-add http://mirror.example.org/zenwalk
+.fi
+
+.SH SEE ALSO
+
+.BR installpkg (8),
+.BR upgradepkg (8),
+.BR removepkg (8),
+.BR wget (1)
+
+.SH AUTHOR
+
+Jean-Philippe Guillemin
+< h1p8r10n@yandex.com >
+
+.SH LICENSE
+
+This program is distributed under the terms of the
+GNU General Public License version 2 or later.
+See:
+.B https://www.gnu.org/copyleft/gpl.html

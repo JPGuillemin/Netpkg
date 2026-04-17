@@ -4,7 +4,7 @@
 # the Free Software Foundation; either version 2 of the License, or (at your option)
 # any later version. Please take a look at http://www.gnu.org/copyleft/gpl.htm
 #
-# Zenpkg is a tool for easily install or upgrade packages from the desktop. 
+# Zenpkg is a tool for easily install or upgrade packages from the desktop.
 #
 #
 
@@ -12,29 +12,24 @@ version="9.1"
 
 # Take a look at "Xdialog" and use it instead of "dialog" in case X is running
 if [[ "$DISPLAY" && "$(which Xdialog 2>&1 | grep -v "which: no")" ]]; then
-	dialog="Xdialog --fill --wrap --icon netpkg"
-	shortttl='3000'
-	longttl='8000'
-	xflag="yes"
+  dialog="Xdialog --fill --wrap --icon netpkg"
+  shortttl='3000'
+  longttl='8000'
+  xflag="yes"
 else
-	dialog="dialog"
-	shortttl=''
-	longttl=''
-	unset xflag
+  dialog="dialog"
+  shortttl=''
+  longttl=''
+  unset xflag
 fi
 
 # Translations only work with utf8 locales
 if [ ! `echo $LANG | grep -i utf` ]; then
-	LANG=en_US
+  LANG=en_US
 fi
 
-# Gettext internationalization
-export TEXTDOMAIN="netpkg"
-export TEXTDOMAINDIR="/usr/share/locale"
-. gettext.sh
-
-if [ ! "$1" ] ; then 
-  $dialog --ok-label "Close" --title "Error" --msgbox "$(eval_gettext 'Usage :') zenpkg [package1] [package2] ... [packageN]" 6 70
+if [ ! "$1" ] ; then
+  $dialog --ok-label "Close" --title "Error" --msgbox "Usage : zenpkg [package1] [package2] ... [packageN]" 6 70
   exit
 fi
 
@@ -56,7 +51,7 @@ else
   export logfile="${logfile:=/var/log/netpkg.log}"
 fi
 
-# create the buffer directory 
+# create the buffer directory
 mkdir -p $netpkgdir 2>/dev/null
 export buffer="$netpkgdir"
 mkdir -p $buffer 2>/dev/null
@@ -64,7 +59,7 @@ mkdir -p $buffer 2>/dev/null
 # Build a list of installed packages
 getlocalpkglist(){
   rm -f $buffer/localpkglist
-  for meta in $(ls $packagelogs) ; do 
+  for meta in $(ls $packagelogs) ; do
     package="$(sed -n 's/^[ \t]*PACKAGE LOCATION:[ \t]*\(.*\)[ \t]*$/\1/p' $packagelogs/$meta)"
     echo ${package##*/} >> $buffer/localpkglist
   done
@@ -106,12 +101,12 @@ checkinstalled(){
 }
 
 # Check package integrity ######################################
-# checkzip ($package) 
+# checkzip ($package)
 checkzip(){
   [ "$(echo $package | egrep ".*\.tlz$")" ] && ZIP="lzma"
   [ "$(echo $package | egrep ".*\.txz$")" ] && ZIP="lzma"
   [ "$(echo $package | egrep ".*\.tgz$")" ] && ZIP="gzip"
-  $ZIP -tv $1 2>&1 | egrep -e "corrupt|invalid"  
+  $ZIP -tv $1 2>&1 | egrep -e "corrupt|invalid"
 }
 
 
@@ -121,17 +116,17 @@ install(){
 
   # we protect all critical files before package processing
   protect
-  
+
   if [[ -e $1 && ! "$(checkzip $1)" ]]; then
     package="$(basename $1)"
     echo "XXX"
-    echo "$(eval_gettext 'Installing') $package"
+    echo "Installing $package"
     echo "XXX"
     sleep 0.5
     installpkg $1 2>&1 >/dev/null
     echo "[I] $1 $(date)" >> $logfile
   fi
-  
+
   # We delete unchanged protected files or keep the old backuped one
   unprotect
 
@@ -145,15 +140,15 @@ upgrade(){
   # we protect all critical files before package processing
   protect
 
-  # Check gzip integrity 
+  # Check gzip integrity
   if [[ -e $1 && ! "$(checkzip $1)" ]]; then
     package="$(basename $1)"
     echo "XXX"
-    echo "$(eval_gettext 'Upgrading') $package"
+    echo "Upgrading $package"
     echo "XXX"
     sleep 0.5
     upgradepkg --install-new $1 2>&1 >/dev/null
-    echo "[U] $1 $(date)" >> $logfile  
+    echo "[U] $1 $(date)" >> $logfile
   fi
 
   # We delete unchanged protected files or keep the old backuped one
@@ -168,15 +163,15 @@ reinstall(){
   # we protect all critical files before package processing
   protect
 
-  # Check gzip integrity 
+  # Check gzip integrity
   if [[ -e $1 && ! "$(checkzip $1)" ]]; then
     package="$(basename $1)"
     echo "XXX"
-    echo "$(eval_gettext 'Reinstalling') $package"
+    echo "Reinstalling $package"
     echo "XXX"
     sleep 0.5
     upgradepkg --reinstall $1 2>&1 >/dev/null
-    echo "[U] $1 $(date)" >> $logfile  
+    echo "[U] $1 $(date)" >> $logfile
   fi
 
   # We delete unchanged protected files or keep the old backuped one
@@ -187,16 +182,16 @@ reinstall(){
 # Are we given real packages ;)
 list=""
 for path in $* ; do
-	[ ! -e $path ] && continue
-	[ ! "echo $path | grep '.t[glx]z'" ] && continue
-	list="${list} $path"
+  [ ! -e $path ] && continue
+  [ ! "echo $path | grep '.t[glx]z'" ] && continue
+  list="${list} $path"
 done
 
 # how many packages do we have to install
 pkgtotalcount=$(echo $list | wc -w)
-if [ $pkgtotalcount = 0 ] ; then 
-	$dialog --ok-label "$(eval_gettext 'Close')" --title "$(eval_gettext 'Error')" --msgbox "$(eval_gettext 'No package to process')" 6 30
-	exit
+if [ $pkgtotalcount = 0 ] ; then
+  $dialog --ok-label "Close" --title "Error" --msgbox "No package to process" 6 30
+  exit
 fi
 
 getlocalpkglist
@@ -207,49 +202,49 @@ pkgcount=0
 (
 for path in $list ; do
 
-	package="$(basename $path)"
-	progress=$(($pkgcount*$step))
-	echo $progress
-		  # the package name without "tXz"
-		  packagename=${package%.*}
+  package="$(basename $path)"
+  progress=$(($pkgcount*$step))
+  echo $progress
+      # the package name without "tXz"
+      packagename=${package%.*}
 
-		  # the software name
-		  softname=${package%-*}; softname=${softname%-*}; softname=${softname%-*} 
+      # the software name
+      softname=${package%-*}; softname=${softname%-*}; softname=${softname%-*}
 
-		  # take a look in pkgtool logs to see if we've got it installed
-		  installedpkg="$(checkinstalled $softname)"
+      # take a look in pkgtool logs to see if we've got it installed
+      installedpkg="$(checkinstalled $softname)"
 
-		  # Push the bar
-		  progress=$(($progress+$step/2))
-		  echo $progress
+      # Push the bar
+      progress=$(($progress+$step/2))
+      echo $progress
 
-		  if [ -e $packagelogs/$packagename ]; then
-			action="reinstall"
-		  elif [ -n "$installedpkg" ]; then
-			action="upgrade"
-		  else
-			action="install"
-		  fi
+      if [ -e $packagelogs/$packagename ]; then
+      action="reinstall"
+      elif [ -n "$installedpkg" ]; then
+      action="upgrade"
+      else
+      action="install"
+      fi
 
-		  case $action in
-			install)
-			  install $path
-			  ;;
-			reinstall)
-			  reinstall $path
-			  ;;
-			upgrade)
-			  upgrade $path
-		  esac
-		  progress=$(($progress+$step/2))
-		  echo $progress
-		  sleep 1
+      case $action in
+      install)
+        install $path
+        ;;
+      reinstall)
+        reinstall $path
+        ;;
+      upgrade)
+        upgrade $path
+      esac
+      progress=$(($progress+$step/2))
+      echo $progress
+      sleep 1
 
-	pkgcount=$(($pkgcount+1))
+  pkgcount=$(($pkgcount+1))
 done
 echo 100
 sleep 1
-) | $dialog --auto-placement --title "$(eval_gettext 'Processing') $pkgtotalcount $(eval_gettext 'packages')" --gauge "" 8 70
+) | $dialog --auto-placement --title "Processing $pkgtotalcount packages" --gauge "" 8 70
 
 
 
