@@ -4,7 +4,7 @@
 
 
 NAME = netpkg
-VERSION = 11.5
+VERSION = 12.0
 DESTDIR =
 LIBSUFFIX = 64
 PREFIX = /usr
