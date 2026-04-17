@@ -122,7 +122,7 @@ function getPkgFromshortName(){
 }
 
 # The uniq name for pkg
-function getshortName(){
+function getShortName(){
   local shortName=${1%-*}; shortName=${shortName%-*}; shortName=${shortName%-*}
   echo -n "$shortName"
 }
@@ -421,7 +421,7 @@ function printPkgList(){
   local package=$3
 
   # Get package details
-  local shortName="$(getshortName $package)"
+  local shortName="$(getShortName $package)"
   local shortNameDotDot="" ; [[ ${#shortName} -gt 20 ]] && shortNameDotDot=".."
   local localPkg="$(getLocalPkgByshortName $shortName)"
   local localPkgDotDot="" ; [[ ${#localPkg} -gt 30 ]] && localPkgDotDot=".."
@@ -464,7 +464,7 @@ function listPkg() {
   for package in $(sort $netpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
-    local shortName="$(getshortName $package)"
+    local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
@@ -511,16 +511,17 @@ function printSearchResult(){
   local package=$3
 
   # Get package details
-  local shortName="$(getshortName $package)"
+  local shortName="$(getShortName $package)"
   local shortNameDotDot="" ; [[ ${#shortName} -gt 20 ]] && shortNameDotDot=".."
   local localPkg="$(getLocalPkgByshortName $shortName)"
+  [[ -z $localPkg ]] && localPkg="------------"
   local localPkgDotDot="" ; [[ ${#localPkg} -gt 30 ]] && localPkgDotDot=".."
   local Desc="$(sed -n "s/$shortName:.*(\(.*\))/\1/p" $netpkgDir/PACKAGES.TXT  | head -n1)"
   [[ ${#Desc} -lt 1 ]] && Desc="$shortName package for Slackware & Zenwalk"
   local location=$(getPkgLocation $package)
   local RemoteURI="$(echo -n $location | cut -d'/' -f3)"
   if [[ "$RemoteURI" == "local" ]]; then
-    RemotePkg="-----"
+    RemotePkg="------------"
   else
     RemotePkg="$package"
     RemotePkgDotDot="" ; [[ ${#package} -gt 30 ]] && RemotePkgDotDot=".."
@@ -550,7 +551,7 @@ function searchAndPrompt(){
 
   for package in $(sort $netpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
 
-    local shortName="$(getshortName $package)"
+    local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
@@ -609,7 +610,7 @@ function searchAndPrompt(){
             break
             ;;
           'remove')
-            removepkg $localPkg
+            removePkg $localPkg
             break
             ;;
           'skip')
@@ -632,6 +633,133 @@ function searchAndPrompt(){
 }
 
 
+# Simplified installPkg function - replaces system installpkg
+function installPkg() {
+  local package="$1"
+
+  # Determine decompressor
+  case ${package##*.} in
+    'tgz') local decomp='gzip' ;;
+    'tbz') local decomp='bzip2' ;;
+    'tlz') local decomp='lzip' ;;
+    'txz') local decomp='xz' ;;
+    *) echo "ERROR: Unknown package extension $ext"; return 1 ;;
+  esac
+
+  echo "Installing package $package..."
+
+  # Extract package
+  ( cd ${ROOT:-/} ; $decomp -dc | tar -xpf - ) < "$localPkgDir/$package" 2>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to extract $package"
+    return 1
+  fi
+
+  # Record installation in package database
+  echo "PACKAGE NAME:     ${package%.*}" > "$packageLogs/${package%.*}"
+  echo "PACKAGE LOCATION: $package" >> "$packageLogs/${package%.*}"
+  echo "PACKAGE DESCRIPTION:" >> "$packageLogs/${package%.*}"
+  echo "FILE LIST:" >> "$packageLogs/${package%.*}"
+  ( cd ${ROOT:-/} ; $decomp -dc | tar -tf - ) < "$package" 2>/dev/null | sort >> "$packageLogs/${package%.*}"
+
+  # Run install script if present
+  if [ -f "${ROOT:-/}/install/doinst.sh" ]; then
+    echo "Executing install script..."
+    ( cd ${ROOT:-/} ; sh install/doinst.sh 2>/dev/null )
+    rm -rf "${ROOT:-/}/install" 2>/dev/null
+  fi
+
+  # Update library cache
+  if [ -z "$ROOT" ] && [ -x /sbin/ldconfig ]; then
+    /sbin/ldconfig 2>/dev/null
+  fi
+
+  echo "Package $package installed successfully."
+  return 0
+}
+
+# Simplified upgradePkg function - replaces system upgradepkg
+function upgradePkg() {
+  local package="$1"
+  local shortName="$(getShortName $package)"
+  local oldPkg="$(getLocalPkgByshortName $shortName)"
+
+  if [ -z "$oldPkg" ]; then
+    installPkg "$package"
+    return $?
+  fi
+
+  # Save old file list for cleanup
+  local oldfiles="/tmp/oldfiles.$$"
+  grep "^[^:]*/" "$packageLogs/${oldPkg%.*}" 2>/dev/null | sort -u > "$oldfiles"
+
+  # Install new package
+  installPkg "$package" || return 1
+
+  # Save new file list
+  local newfiles="/tmp/newfiles.$$"
+  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -u > "$newfiles"
+
+  # Remove old package files (keeping new ones)
+  if [ -f "$oldfiles" ]; then
+    echo "Cleaning up old version files..."
+    comm -23 "$oldfiles" "$newfiles" 2>/dev/null | while read file; do
+      if [ -f "${ROOT:-/}$file" ]; then
+        rm -f "${ROOT:-/}$file" 2>/dev/null
+      fi
+    done
+    rm -f "$packageLogs/${oldPkg%.*}"
+  fi
+
+  # Cleanup temp files
+  rm -f "$oldfiles" "$newfiles"
+
+  echo "Package installed successfully."
+  return 0
+}
+
+# Simplified removePkg function - replaces system removepkg
+function removePkg() {
+  local package="$1"
+
+  # Build list of all files from all packages
+  local allFiles="/tmp/allFiles.$$"
+  for pkg in $(ls "$packageLogs/" 2>/dev/null); do
+    [ "$pkg" = "${package%.*}" ] && continue
+    grep "^[^:]*/" "$packageLogs/$pkg" 2>/dev/null
+  done | sort -u > "$allFiles"
+
+  # Remove files that are not used by other packages
+  echo "Removing files..."
+  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -r | while read file; do
+    # Check if file is used by another package
+    if ! grep -q "^$file$" "$allFiles" 2>/dev/null; then
+      if [ -f "${ROOT:-/}$file" ]; then
+        rm -f "${ROOT:-/}$file" 2>/dev/null
+      elif [ -d "${ROOT:-/}$file" ]; then
+        rmdir "${ROOT:-/}$file" 2>/dev/null  # Only removes if empty
+      fi
+    fi
+  done
+
+  # Remove package database entry
+  rm -f "$packageLogs/${package%.*}"
+
+  # Cleanup
+  rm -f "$allFiles"
+
+  # Update library cache
+  if [ -z "$ROOT" ] && [ -x /sbin/ldconfig ]; then
+    /sbin/ldconfig 2>/dev/null
+  fi
+
+  echo "Package $package removed successfully."
+  return 0
+}
+
+
+
+
 # Check deps , then Install / Reinstall / Upgrade a list of packages
 # The full and exact package name MUST be provided
 function processPkgs() {
@@ -647,7 +775,7 @@ if [[ "$*" ]]; then
   for package in $* ; do
 
     # the software name
-    local shortName="$(getshortName $package)"
+    local shortName="$(getShortName $package)"
 
     finallist="${finallist} $package"
     let "PkgNumber++"
@@ -698,7 +826,7 @@ if [[ "$*" ]]; then
 
     let "PkgCount++"
 
-    echo -e "${BOLDWHITE}Downloading $package ($PkgCount/$PkgNumber) ...${COLOR_RESET}"
+    echo -e "${BOLDWHITE}Getting $package ($PkgCount/$PkgNumber) ...${COLOR_RESET}"
 
     # download the package if needed
     downloadPkg $package
@@ -710,7 +838,7 @@ if [[ "$*" ]]; then
 
     let "PkgCount++"
 
-    local shortName="$(getshortName $package)"
+    local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
     local location="$(getPkgLocation $package)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
@@ -730,23 +858,18 @@ if [[ "$*" ]]; then
     fi
 
     if [[ -e $packageLogs/${package%.*} ]]; then
-      echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Reinstalling"
-      echo -e "${BOLDBLUE} [$source] $package${COLOR_RESET}"
-      [[ -e $localPkgDir/$package ]] && upgradepkg --reinstall $localPkgDir/$package | grep -v -E "^$|#|DESCRIPTION:|\+=|\|" && echo "[U] $location/$package $(date)" >> $logFile
-
+      pkgStatus="U"
     elif [[ $status == 1 ]]; then
-      echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Upgrading"
-      echo -e "${BOLDRED} [$source] $package${COLOR_RESET}"
-      [[ -e $localPkgDir/$package ]] && upgradepkg $localPkgDir/$package | grep -v -E "^$|#|DESCRIPTION:|\+=|\|" && echo "[U] $location/$package $(date)" >> $logFile
+      pkgStatus="U"
     elif [[ $status == 2 ]]; then
-      echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Downgrading"
-      echo -e "${BOLDYELLOW} [$source] $package${COLOR_RESET}"
-      [[ -e $localPkgDir/$package ]] && upgradepkg $localPkgDir/$package | grep -v -E "^$|#|DESCRIPTION:|\+=|\|" && echo "[U] $location/$package $(date)" >> $logFile
+      pkgStatus="D"
     else
-      echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Installing"
-      echo -e "${BOLDCYAN} [$source] $package${COLOR_RESET}"
-      [[ -e $localPkgDir/$package ]] && installpkg $localPkgDir/$package | grep -v -E "^$|#|DESCRIPTION:|\+=|\|" && echo "[I] $location/$package $(date)" >> $logFile
+      pkgStatus="N"
     fi
+
+    echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Installing"
+    echo -e "${BOLDRED} [$source] $package${COLOR_RESET}"
+    [[ -e $localPkgDir/$package ]] && upgradePkg $package && echo "[${pkgStatus}I] $location/$package $(date)" >> $logFile
 
     # remove package if we don't want to keep it
     if [[ ! "$keepit" = 'yes' ]]; then
@@ -803,7 +926,7 @@ function updateAll() {
 
   for package in $(<$netpkgDir/.BUFFER1) ; do
 
-    local shortName="$(getshortName $package)"
+    local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
