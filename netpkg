@@ -775,7 +775,12 @@ function removePkg() {
 function processPkgs() {
 
 if [[ "$*" ]]; then
-
+  local filesystem='no'
+  if [[ -e "$1" ]]; then
+    processDependencies='no'
+    prompt='yes'
+    filesystem='yes'
+  fi
   finallist=''
   PkgNumber=0
 
@@ -784,9 +789,7 @@ if [[ "$*" ]]; then
 
   for package in $* ; do
 
-    # the software name
     local shortName="$(getShortName $package)"
-
     finallist="${finallist} $package"
     let "PkgNumber++"
 
@@ -831,41 +834,51 @@ if [[ "$*" ]]; then
     done
   fi
 
+  if [[ "$filesystem" == "no" ]]; then
+    PkgCount=0
+    for package in $finallist ; do
+
+      let "PkgCount++"
+
+      echo -e "${BOLDWHITE}Getting $package ($PkgCount/$PkgNumber) ...${COLOR_RESET}"
+
+      # download the package if needed
+      downloadPkg $package
+
+    done
+  fi
+
   PkgCount=0
   for package in $finallist ; do
 
-    let "PkgCount++"
-
-    echo -e "${BOLDWHITE}Getting $package ($PkgCount/$PkgNumber) ...${COLOR_RESET}"
-
-    # download the package if needed
-    downloadPkg $package
-
-  done
-
-  PkgCount=0
-  for package in $finallist ; do
+    if [[ "$filesystem" == "yes" ]]; then
+      export localPkgDir="$(dirname $package)"
+      package="$(basename $package)"
+      local location="$localPkgDir"
+      local source="$localPkgDir"
+      if [[ ! -e $localPkgDir/$package ]]; then
+        echo -e "${BOLDWHITE}No such file $localPkgDir/$package !${COLOR_RESET}"
+        continue
+      fi
+    else
+      local location="$(getPkgLocation $package)"
+      if [[ "$(md5sum $localPkgDir/$package | cut -d" " -f1)" == "$(cut -d" " -f1 $localPkgDir/${package%.*}.md5)" ]]; then
+        echo -e "Checksum is OK for $package :)"
+      else
+        echo -e "${BOLDRED}Package corrupted or unable to get checksum for $package : skipping !${COLOR_RESET}"
+        mv "$localPkgDir/$package" "$localPkgDir/_BAD_$package"
+        mv "$localPkgDir/${package%.*}.md5" "$localPkgDir/_BAD_${package%.*}.md5"
+        continue
+      fi
+      local source="$(getSource $package)"
+      [[ ! -e $localPkgDir/$package ]] && downloadPkg $package
+    fi
 
     let "PkgCount++"
 
     local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
-    local location="$(getPkgLocation $package)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
-
-    # We need to find the source for $package, as information
-    source="$(getSource $package)"
-
-    [[ ! -e $localPkgDir/$package ]] && downloadPkg $package
-
-    if [[ "$(md5sum $localPkgDir/$package | cut -d" " -f1)" == "$(cut -d" " -f1 $localPkgDir/${package%.*}.md5)" ]]; then
-      echo -e "Checksum is OK for $package :)"
-    else
-      echo -e "${BOLDRED}Package corrupted or unable to get checksum for $package : skipping !${COLOR_RESET}"
-      mv "$localPkgDir/$package" "$localPkgDir/_BAD_$package"
-      mv "$localPkgDir/${package%.*}.md5" "$localPkgDir/_BAD_${package%.*}.md5"
-      continue
-    fi
 
     if [[ -e $packageLogs/${package%.*} ]]; then
       pkgStatus="U"
@@ -1073,7 +1086,7 @@ function uusage() {
 
 
 
-# Local options
+# Admin options
 if [[ "$1" ]]; then
   case "$1" in
     '--help' | '-help' | 'help' | '-h')
@@ -1162,7 +1175,7 @@ checkDbAge() {
 }
 
 
-# Networked options
+# Processing options
 if [[ "$1" ]]; then
   case "$1" in
     'update' | '-u')
@@ -1205,11 +1218,15 @@ if [[ "$1" ]]; then
     'install' | '-i')
       [[ $# -lt 2 ]] && echo "Missing search pattern !" && exit 1
       shift
-      export statusFilter='IURD'
-      checkDbAge
       Protect
-      echo "Searching $* ..."
-      searchAndPrompt $*
+      if [[ -e "$1" ]]; then
+        processPkgs $*
+      else
+        export statusFilter='IURD'
+        checkDbAge
+        echo "Searching $* ..."
+        searchAndPrompt $*
+      fi
       unProtect
       checkDotNew
       installKernel
