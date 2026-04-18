@@ -228,10 +228,10 @@ function fetchRemotes(){
       echo 'Filtering out blacklisted packages'
       blacklist="$(getRemoteBlacklist $source)"
       for pkg in $blacklist ; do
-        grep -v -e "^PACKAGE NAME: *$pkg *" $netpkgDir/$source.TXT > $netpkgDir/.BUFFER1
-        cat $netpkgDir/.BUFFER1 > $netpkgDir/$source.TXT
+        grep -v -e "^PACKAGE NAME: *$pkg *" $netpkgDir/$source.TXT > $netpkgDir/.tmpPkgList.$$
+        cat $netpkgDir/.tmpPkgList.$$ > $netpkgDir/$source.TXT
       done
-      rm -f $netpkgDir/.BUFFER1
+      rm -f $netpkgDir/.tmpPkgList.$$
       cat $netpkgDir/$source.TXT >> $netpkgDir/PACKAGES.TXT
 
       if [[ "$processDependencies" == 'yes' ]] ; then
@@ -240,7 +240,7 @@ function fetchRemotes(){
         /^PACKAGE NAME:.*/{
         N;N;N;N
         s/,/ /g
-        s/^PACKAGE NAME:[[ \t]*\(.*\)-[^-]*-[^-]*-[^-]*\.t[glx]z[[ \t]*\n.*\nPACKAGE SIZE (compressed):[[ \t]*\(.*\)\nPACKAGE SIZE (uncompressed):[[ \t]*\(.*\)\nPACKAGE REQUIRED:[[ \t]*\(.*\)/\1:\4/p
+        s/^PACKAGE NAME:[[ \t]*\(.*\)-[^-]*-[^-]*-[^-]*\.t[glx]z[[ \t]*\n.*\nCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nUNCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nPACKAGE REQUIRED:[[ \t]*\(.*\)/\1:\4/p
         }' \
         $netpkgDir/$source.TXT > $netpkgDir/RemoteDeps.db.$source
         cat $netpkgDir/RemoteDeps.db.$source >> $netpkgDir/RemoteDeps.db
@@ -251,7 +251,7 @@ function fetchRemotes(){
       #sed -n '
       #/^PACKAGE NAME:.*/{
       #N;N;N;N;N;N;N;N
-      #s/^PACKAGE NAME:[[ \t]*\(.*\)-[^-]*-[^-]*-[^-]*\.t[glx]z[[ \t]*\n.*\nPACKAGE SIZE (compressed):[[ \t]*\(.*\)\nPACKAGE SIZE (uncompressed):[[ \t]*\(.*\)\nPACKAGE REQUIRED:[[ \t]*\(.*\)\n.*\n.*\n.*\n[^ \t]*:[[ \t]*\(.*\)/\1: Description : \5\n\1: Compressed :  \2\n\1: Uncompressed :  \3\n\1: processDependencies : \4/p
+      #s/^PACKAGE NAME:[[ \t]*\(.*\)-[^-]*-[^-]*-[^-]*\.t[glx]z[[ \t]*\n.*\nCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nUNCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nPACKAGE REQUIRED:[[ \t]*\(.*\)\n.*\n.*\n.*\n[^ \t]*:[[ \t]*\(.*\)/\1: Description : \5\n\1: Compressed :  \2\n\1: Uncompressed :  \3\n\1: processDependencies : \4/p
       #}' $netpkgDir/PACKAGES.TXT > $netpkgDir/descfile
 
 
@@ -449,19 +449,19 @@ function printPkgList(){
 # list packages from Remote #########################
 function listPkg() {
 
-  truncate -s0 $netpkgDir/.BUFFER1
+  truncate -s0 $netpkgDir/.tmpPkgList.$$
   for pattern in $* ; do
     if [[ -n "$(echo "$statusFilter" | grep 'U')" || -n "$(echo "$statusFilter" | grep 'D')" || -n "$(echo "$statusFilter" | grep 'R')" ]]; then
-      getRemotePkgs | grep "$pattern" >> $netpkgDir/.BUFFER1
+      getRemotePkgs | grep "$pattern" >> $netpkgDir/.tmpPkgList.$$
     fi
     if [[ -n "$(echo "$statusFilter" | grep 'I')" ]]; then
-      getLocalPkgs | grep "$pattern" >> $netpkgDir/.BUFFER1
+      getLocalPkgs | grep "$pattern" >> $netpkgDir/.tmpPkgList.$$
     fi
   done
 
   tput bold ; printf "%-26s %-16s %-16s %-22s %-5s\n" "  Name" "Version" "Build" "Remote" "Info" ; tput sgr0
 
-  for package in $(sort $netpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
+  for package in $(sort $netpkgDir/.tmpPkgList.$$ 2>/dev/null | uniq) ; do
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
     local shortName="$(getShortName $package)"
@@ -538,18 +538,18 @@ function printSearchResult(){
 # prompt for action (install / upgrade / reinstall / download) for a list of packages ($*) #########################
 function searchAndPrompt(){
 
-  truncate -s0 $netpkgDir/.BUFFER1
+  truncate -s0 $netpkgDir/.tmpPkgList.$$
 
   for pattern in $* ; do
     if [[ -n "$(echo "$statusFilter" | grep 'U')" || -n "$(echo "$statusFilter" | grep 'D')" || -n "$(echo "$statusFilter" | grep 'R')" ]]; then
-      getRemotePkgs | grep "$pattern" >> $netpkgDir/.BUFFER1
+      getRemotePkgs | grep "$pattern" >> $netpkgDir/.tmpPkgList.$$
     fi
     if [[ -n "$(echo "$statusFilter" | grep 'I')" ]] || [[ -n "$(echo "$statusFilter" | grep 'X')" ]]; then
-      getLocalPkgs | grep "$pattern" >> $netpkgDir/.BUFFER1
+      getLocalPkgs | grep "$pattern" >> $netpkgDir/.tmpPkgList.$$
     fi
   done
 
-  for package in $(sort $netpkgDir/.BUFFER1 2>/dev/null | uniq) ; do
+  for package in $(sort $netpkgDir/.tmpPkgList.$$ 2>/dev/null | uniq) ; do
 
     local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
@@ -562,10 +562,10 @@ function searchAndPrompt(){
     # it's installed
     if [[ -n "$localPkg" ]]; then
       if [[ $status == 0 ]] ; then
-        [[ -n "$(echo "$statusFilter" | grep 'U')" ]] && continue
+        # [[ -n "$(echo "$statusFilter" | grep 'U')" ]] && continue
         if [[ -n "$(echo "$statusFilter" | grep 'I')" ]]; then
           printSearchResult "I" ${BOLDBLUE} $package
-          local actionlist='reinstall skip exit download remove'
+          local actionlist='reinstall skip exit download'
         elif [[ -n "$(echo "$statusFilter" | grep 'X')" ]]; then
           printSearchResult "I" ${BOLDBLUE} $package
           local actionlist='remove skip exit'
@@ -575,14 +575,14 @@ function searchAndPrompt(){
       elif [[ $status == 1 ]]; then
         if [[ -n "$(echo "$statusFilter" | grep 'U')" ]]; then
           printSearchResult "U" ${BOLDRED} $package
-          local actionlist='install skip exit download remove'
+          local actionlist='install skip exit download'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ $status == 2 ]]; then
         if [[ -n "$(echo "$statusFilter" | grep 'D')" ]]; then
           printSearchResult "D" ${BOLDYELLOW} $package
-          local actionlist='install skip exit download remove'
+          local actionlist='install skip exit download'
         else
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
@@ -625,7 +625,7 @@ function searchAndPrompt(){
           'exit')
             exit
         esac
-        sed -i "/^$shortName-[^\-]*-[^\-]*-[^\-]*\.t[glx]z$/d" $netpkgDir/.BUFFER1
+        sed -i "/^$shortName-[^\-]*-[^\-]*-[^\-]*\.t[glx]z$/d" $netpkgDir/.tmpPkgList.$$
       done
     fi
   done
@@ -656,11 +656,21 @@ function installPkg() {
   fi
 
   # Record installation in package database
+  if [[ "${package##*.}" == "tgz" ]]; then
+    pkgSize=$( expr `gunzip -l "$localPkgDir/$package" |tail -1|awk '{print $1}'` / 1024 )
+    uncompressedPkgSize=$( expr `gunzip -l "$localPkgDir/$package" |tail -1|awk '{print $2}'` / 1024 )
+  else
+    pkgSize=$( expr `ls -l "$localPkgDir/$package" | awk '{print $5}'` / 1024 )
+    uncompressedPkgSize=$[$pkgSize * 4 ]
+  fi
   echo "PACKAGE NAME:     ${package%.*}" > "$packageLogs/${package%.*}"
-  echo "PACKAGE LOCATION: $package" >> "$packageLogs/${package%.*}"
+  echo "PACKAGE LOCATION: $localPkgDir/$package" >> "$packageLogs/${package%.*}"
+  echo "COMPRESSED PACKAGE SIZE:  ${pkgSize}K" >> "$packageLogs/${package%.*}"
+  echo "UNCOMPRESSED PACKAGE SIZE:  ${uncompressedPkgSize}K" >> "$packageLogs/${package%.*}"
   echo "PACKAGE DESCRIPTION:" >> "$packageLogs/${package%.*}"
+  ( cd ${ROOT:-/} ; $decomp -dc | tar xO install/slack-desc | grep -E '[^[:space:]]*\:'| grep -v '^#' ) < "$localPkgDir/$package" 2>/dev/null >> "$packageLogs/${package%.*}"
   echo "FILE LIST:" >> "$packageLogs/${package%.*}"
-  ( cd ${ROOT:-/} ; $decomp -dc | tar -tf - ) < "$package" 2>/dev/null | sort >> "$packageLogs/${package%.*}"
+  ( cd ${ROOT:-/} ; $decomp -dc | tar -tf - ) < "$localPkgDir/$package" 2>/dev/null | sort >> "$packageLogs/${package%.*}"
 
   # Run install script if present
   if [ -f "${ROOT:-/}/install/doinst.sh" ]; then
@@ -690,20 +700,20 @@ function upgradePkg() {
   fi
 
   # Save old file list for cleanup
-  local oldfiles="/tmp/oldfiles.$$"
-  grep "^[^:]*/" "$packageLogs/${oldPkg%.*}" 2>/dev/null | sort -u > "$oldfiles"
+  local oldFiles="$netpkgDir/.oldFiles.$$"
+  grep "^[^:]*/" "$packageLogs/${oldPkg%.*}" 2>/dev/null | sort -u > "$oldFiles"
 
   # Install new package
   installPkg "$package" || return 1
 
   # Save new file list
-  local newfiles="/tmp/newfiles.$$"
-  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -u > "$newfiles"
+  local newFiles="$netpkgDir/.newFiles.$$"
+  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -u > "$newFiles"
 
   # Remove old package files (keeping new ones)
-  if [ -f "$oldfiles" ]; then
+  if [ -f "$oldFiles" ]; then
     echo "Cleaning up old version files..."
-    comm -23 "$oldfiles" "$newfiles" 2>/dev/null | while read file; do
+    comm -23 "$oldFiles" "$newFiles" 2>/dev/null | while read file; do
       if [ -f "${ROOT:-/}$file" ]; then
         rm -f "${ROOT:-/}$file" 2>/dev/null
       fi
@@ -712,7 +722,7 @@ function upgradePkg() {
   fi
 
   # Cleanup temp files
-  rm -f "$oldfiles" "$newfiles"
+  rm -f "$oldFiles" "$newFiles"
 
   echo "Package installed successfully."
   return 0
@@ -770,7 +780,7 @@ if [[ "$*" ]]; then
   PkgNumber=0
 
   # We need an up to date list of installed packages
-  buildlocalPkgsDb
+  buildLocalPkgsDb
 
   for package in $* ; do
 
@@ -919,12 +929,12 @@ function downloadAll() {
 # upgrade the whole system ###############################################
 function updateAll() {
 
-  truncate -s0 $netpkgDir/.BUFFER1
+  truncate -s0 $netpkgDir/.tmpPkgList.$$
   finallist=""
 
-  getRemotePkgs > $netpkgDir/.BUFFER1
+  getRemotePkgs > $netpkgDir/.tmpPkgList.$$
 
-  for package in $(<$netpkgDir/.BUFFER1) ; do
+  for package in $(<$netpkgDir/.tmpPkgList.$$) ; do
 
     local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
@@ -995,6 +1005,7 @@ done
 function cleanup(){
   # We delete unchanged Protected files or keep the old backuped one
   unProtect
+  rm -f "$netpkgDir/*.$$"
   echo -e "Bye ${BOLDRED};)${COLOR_RESET}"
   echo
   exit 0
@@ -1165,10 +1176,10 @@ if [[ "$1" ]]; then
       echo 'Searching for updates ...'
       export statusFilter='U'
       updateAll
+      export prompt='yes'
       echo 'Searching for missings ...'
       export statusFilter='R'
       updateAll
-      export prompt='no'
       unProtect
       checkDotNew
       installKernel
@@ -1182,10 +1193,10 @@ if [[ "$1" ]]; then
       echo 'Searching for updates ...'
       export statusFilter='U'
       updateAll
+      export prompt='yes'
       echo 'Searching for missings ...'
       export statusFilter='R'
       updateAll
-      export prompt='no'
       unProtect
       checkDotNew
       installKernel
