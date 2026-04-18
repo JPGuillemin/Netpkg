@@ -113,7 +113,7 @@ function getRemotePkgs(){
 }
 
 function getLocalPkgs(){
-  cat $netpkgDir/LocalPkgs.db | sort
+  sort $netpkgDir/LocalPkgs.db
 }
 
 # fetch the packages list for package named $1
@@ -157,8 +157,6 @@ function getSource(){
 function buildLocalPkgsDb(){
   rm -f $netpkgDir/LocalPkgs.db
   for meta in $(ls $packageLogs) ; do
-    # package="$(sed -n 's/^[[ \t]*PACKAGE LOCATION:[[ \t]*\(.*\)[[ \t]*$/\1/p' $packageLogs/$meta)"
-    # echo ${package##*/} >> $netpkgDir/LocalPkgs.db
     echo $meta.txz >> $netpkgDir/LocalPkgs.db
   done
 }
@@ -246,15 +244,6 @@ function fetchRemotes(){
         cat $netpkgDir/RemoteDeps.db.$source >> $netpkgDir/RemoteDeps.db
       fi
 
-
-      #echo 'Computing packages descriptions'
-      #sed -n '
-      #/^PACKAGE NAME:.*/{
-      #N;N;N;N;N;N;N;N
-      #s/^PACKAGE NAME:[[ \t]*\(.*\)-[^-]*-[^-]*-[^-]*\.t[glx]z[[ \t]*\n.*\nCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nUNCOMPRESSED PACKAGE SIZE:[[ \t]*\(.*\)\nPACKAGE REQUIRED:[[ \t]*\(.*\)\n.*\n.*\n.*\n[^ \t]*:[[ \t]*\(.*\)/\1: Description : \5\n\1: Compressed :  \2\n\1: Uncompressed :  \3\n\1: processDependencies : \4/p
-      #}' $netpkgDir/PACKAGES.TXT > $netpkgDir/descfile
-
-
       echo 'Creating remote packages list'
       sed -n "/^PACKAGE NAME:.*/{ N; s|^PACKAGE NAME:[[ \t]*\(.*\.t[glx]z\)[[ \t]*\nPACKAGE LOCATION:[[ \t]*\.\/\?\(.*\)|$RemoteURL\/\2 \1|p }" \
         $netpkgDir/$source.TXT > $netpkgDir/RemotePkgs.db.$source
@@ -292,6 +281,11 @@ function getRemoteBlacklist(){
 # take a look at local packages list to see which version of the $1 package installed
 function getLocalPkgByshortName(){
   sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db
+}
+
+function getLocalPkg(){
+  local shortName=${1%-*}; shortName=${shortName%-*}; shortName=${shortName%-*}
+  sed -n "s/^\($shortName-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db
 }
 
 # Download ($package)
@@ -406,7 +400,6 @@ function addRemote(){
       source="$(getHostFromURL $1)"
       echo "URL = $1" > $remotesDir/$source
       echo "Black_list = " >> $remotesDir/$source
-      # sourcehash="$(echo "$2" | md5sum | cut -d " " -f 1)"
       echo -e "${BOLDGREEN}$source${COLOR_RESET} has been configured"
     fi
   else
@@ -464,8 +457,7 @@ function listPkg() {
   for package in $(sort $netpkgDir/.tmpPkgList.$$ 2>/dev/null | uniq) ; do
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
 
-    local shortName="$(getShortName $package)"
-    local localPkg="$(getLocalPkgByshortName $shortName)"
+    local localPkg="$(getLocalPkg $package)"
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
 
@@ -562,7 +554,6 @@ function searchAndPrompt(){
     # it's installed
     if [[ -n "$localPkg" ]]; then
       if [[ $status == 0 ]] ; then
-        # [[ -n "$(echo "$statusFilter" | grep 'U')" ]] && continue
         if [[ -n "$(echo "$statusFilter" | grep 'I')" ]]; then
           printSearchResult "I" ${BOLDBLUE} $package
           local actionlist='reinstall skip exit download'
@@ -742,12 +733,11 @@ function removePkg() {
   # Remove files that are not used by other packages
   echo "Removing files..."
   grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -r | while read file; do
-    # Check if file is used by another package
     if ! grep -q "^$file$" "$allFiles" 2>/dev/null; then
       if [ -f "${ROOT:-/}$file" ]; then
         rm -f "${ROOT:-/}$file" 2>/dev/null
       elif [ -d "${ROOT:-/}$file" ]; then
-        rmdir "${ROOT:-/}$file" 2>/dev/null  # Only removes if empty
+        rmdir "${ROOT:-/}$file" 2>/dev/null
       fi
     fi
   done
@@ -768,50 +758,48 @@ function removePkg() {
 }
 
 
-
-
-# Check deps , then Install / Reinstall / Upgrade a list of packages
+# Check deps, then Install / Reinstall / Upgrade a list of packages
 # The full and exact package name MUST be provided
 function processPkgs() {
 
-if [[ "$*" ]]; then
+if [[ ${#@} -gt 0 ]]; then
   local filesystem='no'
   if [[ -e "$1" ]]; then
     processDependencies='no'
     prompt='yes'
     filesystem='yes'
   fi
-  finallist=''
-  PkgNumber=0
+  local finallist=()
+  local PkgNumber=0
 
   # We need an up to date list of installed packages
   buildLocalPkgsDb
 
-  for package in $* ; do
+  for package in "$@" ; do
 
     local shortName="$(getShortName $package)"
-    finallist="${finallist} $package"
+    finallist+=("$package")
     let "PkgNumber++"
 
     if [[ "$processDependencies" == 'yes' ]] ; then
 
-      deps="$(grep "^$shortName:.*$" $netpkgDir/RemoteDeps.db | cut -s -d ":" -f 2-)"
-      [[ ! "$deps" ]] && deps="$(grep "^$shortName:.*$" $netpkgDir/DepsDB | cut -s -d ":" -f 2-)"
-      [[ ! "$deps" ]] && continue
+      read -ra deps <<< "$(grep "^$shortName:.*$" $netpkgDir/RemoteDeps.db | cut -s -d ":" -f 2-)"
+      [[ ${#deps[@]} -eq 0 ]] && read -ra deps <<< "$(grep "^$shortName:.*$" $netpkgDir/DepsDB | cut -s -d ":" -f 2-)"
+      [[ ${#deps[@]} -eq 0 ]] && continue
 
-      for dep in $deps ; do
+      for dep in "${deps[@]}" ; do
 
         # We need to find package for $dep ($dep is the short name)
         deppackage="$(sed -n "s/^.*[[ \t]\($dep-[^\-]*-[^\-]*-[^\-]*.t[glx]z\)[[ \t]*$/\1/p" $netpkgDir/RemotePkgs.db | head -n1)"
         [[ ! "$deppackage" ]] && continue
 
         # If it's already in the list, then skip
-        [[ "$(echo $finallist | grep "$deppackage" )" ]] && continue
+        [[ "$(echo "${finallist[*]}" | grep "$deppackage")" ]] && continue
 
         # Do we have it installed in ANY version ? then skip
         [[ "$(getLocalPkgByshortName $dep)" ]] && continue
 
-        finallist="${finallist} $deppackage"
+        finallist+=("$deppackage")
         let "PkgNumber++"
         prompt='yes'
       done
@@ -821,22 +809,22 @@ if [[ "$*" ]]; then
   if [[ "$prompt" == 'yes' ]] ; then
     prompt=''
     echo "We are about to install $PkgNumber package(s) : continue ?"
-    echo -e "-> ${BOLDRED}${finallist}${COLOR_RESET}"
+    echo -e "-> ${BOLDRED}${finallist[*]}${COLOR_RESET}"
     select action in 'run Forest!' 'abort' ; do
       case $action in
         'run Forest!')
           break
           ;;
         'abort')
-          finallist=''
+          finallist=()
           break
       esac
     done
   fi
 
   if [[ "$filesystem" == "no" ]]; then
-    PkgCount=0
-    for package in $finallist ; do
+    local PkgCount=0
+    for package in "${finallist[@]}" ; do
 
       let "PkgCount++"
 
@@ -848,8 +836,8 @@ if [[ "$*" ]]; then
     done
   fi
 
-  PkgCount=0
-  for package in $finallist ; do
+  local PkgCount=0
+  for package in "${finallist[@]}" ; do
 
     if [[ "$filesystem" == "yes" ]]; then
       export localPkgDir="$(dirname $package)"
@@ -908,8 +896,6 @@ fi
 }
 
 
-
-
 # downloadAll ###############################################
 function downloadAll() {
 
@@ -928,14 +914,10 @@ function downloadAll() {
   fi
 
   for package in $(getRemotePkgs) ; do
-
     if [[ "$package" ]]; then
-
       downloadPkg $package
-
     fi
   done
-
 
 }
 
@@ -943,14 +925,14 @@ function downloadAll() {
 function updateAll() {
 
   truncate -s0 $netpkgDir/.tmpPkgList.$$
-  finallist=""
+  local finallist=()
 
   getRemotePkgs > $netpkgDir/.tmpPkgList.$$
 
   for package in $(<$netpkgDir/.tmpPkgList.$$) ; do
 
-    local shortName="$(getShortName $package)"
-    local localPkg="$(getLocalPkgByshortName $shortName)"
+    local localPkg="$(getLocalPkg $package)"
+
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
     if [[ "$localPkg" == "$package" ]]; then
@@ -961,34 +943,32 @@ function updateAll() {
 
       if [[ $status == 1 && -n "$(echo "$statusFilter" | grep 'U')" ]]; then
         echo "Found updated $package"
-        finallist="${finallist} $package"
+        finallist+=("$package")
       elif [[ $status == 2 && -n "$(echo "$statusFilter" | grep 'D')" ]]; then
         echo "Found downgraded $package"
-        finallist="${finallist} $package"
+        finallist+=("$package")
       fi
     elif [[ -n "$(echo "$statusFilter" | grep 'R')" ]]; then
       local location=$(getPkgLocation $package)
       local category=${location##*/}
       if [[ "$category" == "l" || "$category" == "a" || "$category" == "z" ]]; then
         echo "Found missing $package"
-        finallist="${finallist} $package"
+        finallist+=("$package")
       fi
     fi
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
   done
 
-  processPkgs "$finallist"
+  processPkgs "${finallist[@]}"
   echo 'Search done.'
 
 }
 
 # File Protector function ######################################
 function Protect() {
-  # we backup all critical files as .old
   for protectedFile in $untouchable ; do
     [[ -e $protectedFile ]] && cp -f $protectedFile $protectedFile.old 2>/dev/null
   done
-  # lock running // netpkg
   if [[ -e "$netpkgDir/.lock" ]]; then
     echo "Another netpkg process is running, exiting ($(<$netpkgDir/.lock)) !"
     exit 1
@@ -999,24 +979,20 @@ function Protect() {
 # File unProtector function
 function unProtect() {
   rm -f "$netpkgDir/.lock"
-# delete backuped files in case it's the same OR no newer was added
 for protectedFile in $untouchable ; do
   if [[ -e $protectedFile ]]; then
     newFile="$protectedFile"
     oldFile="$newFile.old"
-    # clean up the redundant copy
     if [[ "$(md5sum "$oldFile" 2>/dev/null | cut -f1 -d" ")" == "$(md5sum "$newFile" 2>/dev/null | cut -f1 -d" ")" ]]; then
         rm -f "$oldFile" 2>/dev/null
     fi
   fi
-  # Otherwise, we leave the .old copy for root to consider...
 done
 
 }
 
 # Final cleanup ######################################
 function cleanup(){
-  # We delete unchanged Protected files or keep the old backuped one
   unProtect
   rm -f "$netpkgDir/*.$$"
   echo -e "Bye ${BOLDRED};)${COLOR_RESET}"
@@ -1042,7 +1018,6 @@ echo "   /_/|_/ \__/ \__// .__//_/\_\ \_, / ";
 echo "                  /_/          /___/  ";
 echo -e "${COLOR_RESET}"
 }
-# CLI howto ###############################################
 
 function usage() {
   echo -e "Basic usage : "
@@ -1078,13 +1053,11 @@ function uusage() {
   echo -e " ${BOLDWHITE}netpkg remote-disable|-rd ${COLOR_RESET} : disable dependency processing in netpkg.conf"
   echo -e " ${BOLDWHITE}netpkg enable-deps|-ed ${COLOR_RESET} : enable dependency processing in netpkg.conf"
   echo -e " ${BOLDWHITE}netpkg mrclean|-mc ${COLOR_RESET} : clean the local packages cache"
-  echo -e " ${BOLDWHITE}netpkg dotnew|-z ${COLOR_RESET} : search for .new config files in the suystem and prompt for action"
+  echo -e " ${BOLDWHITE}netpkg dotnew|-z ${COLOR_RESET} : search for .new config files in the system and prompt for action"
   echo -en ${COLOR_RESET}
   echo -e "Copyright Jean-Philippe Guillemin <h1p8r10n@yandex.com> GNU GPLv2"
   echo
 }
-
-
 
 # Admin options
 if [[ "$1" ]]; then
@@ -1141,7 +1114,6 @@ fi
 
 checkDbAge() {
   if [[ -e $netpkgDir/RemotePkgs.db ]] ; then
-    # How old is the DB ?
     DbAge=$(stat -c %Z $netpkgDir/RemotePkgs.db )
 
     if [[ $(($(date +%s) - $DbAge)) -ge 3600 ]] ; then
@@ -1220,12 +1192,12 @@ if [[ "$1" ]]; then
       shift
       Protect
       if [[ -e "$1" ]]; then
-        processPkgs $*
+        processPkgs "$@"
       else
         export statusFilter='IURD'
         checkDbAge
         echo "Searching $* ..."
-        searchAndPrompt $*
+        searchAndPrompt "$@"
       fi
       unProtect
       checkDotNew
@@ -1238,7 +1210,7 @@ if [[ "$1" ]]; then
       export statusFilter='X'
       Protect
       echo "Searching $* ..."
-      searchAndPrompt $*
+      searchAndPrompt "$@"
       unProtect
       exit 0
       ;;
@@ -1247,7 +1219,7 @@ if [[ "$1" ]]; then
       shift
       echo "Searching $* ..."
       export statusFilter='IURD'
-      listPkg $*
+      listPkg "$@"
       exit 0
       ;;
     -*)
@@ -1258,7 +1230,7 @@ if [[ "$1" ]]; then
     *)
       echo "Searching $* ..."
       export statusFilter='IURD'
-      listPkg $*
+      listPkg "$@"
       exit 0
     esac
 else
@@ -1267,5 +1239,3 @@ else
 fi
 
 exit 0
-
-
