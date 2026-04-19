@@ -722,7 +722,6 @@ function upgradePkg() {
 # Simplified removePkg function - replaces system removepkg
 function removePkg() {
   local package="$1"
-
   # Build list of all files from all packages
   local allFiles="/tmp/allFiles.$$"
   for pkg in $(ls "$packageLogs/" 2>/dev/null); do
@@ -732,15 +731,35 @@ function removePkg() {
 
   # Remove files that are not used by other packages
   echo "Removing files..."
+  local dirList="/tmp/dirList.$$"
   grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -r | while read file; do
     if ! grep -q "^$file$" "$allFiles" 2>/dev/null; then
       if [ -f "${ROOT:-/}$file" ]; then
         rm -f "${ROOT:-/}$file" 2>/dev/null
       elif [ -d "${ROOT:-/}$file" ]; then
-        rmdir "${ROOT:-/}$file" 2>/dev/null
+        # Collect directories for later processing
+        echo "${ROOT:-/}$file" >> "$dirList"
       fi
     fi
   done
+
+  # Clean broken symlinks in directories, then remove empty directories
+  if [ -f "$dirList" ]; then
+    echo "Cleaning directories..."
+    sort -u "$dirList" | sort -r | while read dir; do
+      if [ -d "$dir" ]; then
+        # Recursively find and remove broken symlinks
+        find "$dir" -type l 2>/dev/null | while read symlink; do
+          if [ ! -e "$symlink" ]; then
+            rm -f "$symlink" 2>/dev/null
+          fi
+        done
+        # Try to remove directory (only works if empty)
+        rmdir "$dir" 2>/dev/null
+      fi
+    done
+    rm -f "$dirList"
+  fi
 
   # Remove package database entry
   rm -f "$packageLogs/${package%.*}"
