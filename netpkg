@@ -554,7 +554,6 @@ function searchAndPrompt(){
     # it's installed
     if [[ -n "$localPkg" ]]; then
       if [[ $status == 0 ]] ; then
-        [[ -n "$(grep "${shortName}_" $netpkgDir/.tmpUpdatedPkg.$$)" ]] && continue
         if [[ -n "$(echo "$statusFilter" | grep 'I')" ]]; then
           printSearchResult "I" ${BOLDBLUE} $package
           local actionlist='reinstall skip exit download'
@@ -565,7 +564,6 @@ function searchAndPrompt(){
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ $status == 1 ]]; then
-        [[ -n "$(grep "${shortName}_" $netpkgDir/.tmpUpdatedPkg.$$)" ]] && continue || echo "${shortName}_" >> $netpkgDir/.tmpUpdatedPkg.$$
         if [[ -n "$(echo "$statusFilter" | grep 'U')" ]]; then
           printSearchResult "U" ${BOLDRED} $package
           local actionlist='install skip exit download'
@@ -573,7 +571,6 @@ function searchAndPrompt(){
           [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
         fi
       elif [[ $status == 2 ]]; then
-        [[ -n "$(grep "${shortName}_" $netpkgDir/.tmpUpdatedPkg.$$)" ]] && continue || echo "${shortName}_" >> $netpkgDir/.tmpUpdatedPkg.$$
         if [[ -n "$(echo "$statusFilter" | grep 'D')" ]]; then
           printSearchResult "D" ${BOLDYELLOW} $package
           local actionlist='install skip exit download'
@@ -597,15 +594,15 @@ function searchAndPrompt(){
         case $action in
           'install')
             processPkgs $package
-            break
+            return
             ;;
           'reinstall')
             processPkgs $package
-            break
+            return
             ;;
           'remove')
             removePkg $localPkg
-            break
+            return
             ;;
           'skip')
             echo "Skipping [$(echo -n $location | cut -d'/' -f3)] $package"
@@ -614,7 +611,7 @@ function searchAndPrompt(){
             ;;
           'download')
             downloadPkg $package
-            break
+            return
             ;;
           'exit')
             exit
