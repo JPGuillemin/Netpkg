@@ -170,6 +170,7 @@ function installKernel(){
 
 # Download and process the meta file
 function fetchRemotes(){
+  rm -f "$netpkgDir/.tmp*"
 
   if [[ "$source" != 'local' ]] ; then
     echo 'Cleaning cache'
@@ -626,6 +627,7 @@ function searchAndPrompt(){
 
 # Simplified installPkg function - replaces system installpkg
 function installPkg() {
+  truncate -s0 $netpkgDir/.tmp*
   local package="$1"
 
   # Determine decompressor
@@ -681,6 +683,7 @@ function installPkg() {
 
 # Simplified upgradePkg function - replaces system upgradepkg
 function upgradePkg() {
+  truncate -s0 $netpkgDir/.tmp*
   local package="$1"
   local shortName="$(getShortName $package)"
   local oldPkg="$(getLocalPkgByshortName $shortName)"
@@ -691,14 +694,14 @@ function upgradePkg() {
   fi
 
   # Save old file list for cleanup
-  local oldFiles="$netpkgDir/.oldFiles.$$"
+  local oldFiles="$netpkgDir/.tmpOldFiles.$$"
   grep "^[^:]*/" "$packageLogs/${oldPkg%.*}" 2>/dev/null | sort -u > "$oldFiles"
 
   # Install new package
   installPkg "$package" || return 1
 
   # Save new file list
-  local newFiles="$netpkgDir/.newFiles.$$"
+  local newFiles="$netpkgDir/.tmpNewFiles.$$"
   grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -u > "$newFiles"
 
   # Remove old package files (keeping new ones)
@@ -721,9 +724,10 @@ function upgradePkg() {
 
 # Simplified removePkg function - replaces system removepkg
 function removePkg() {
+  truncate -s0 $netpkgDir/.tmp*
   local package="$1"
   # Build list of all files from all packages
-  local allFiles="/tmp/allFiles.$$"
+  local allFiles="$netpkgDir/.tmpAllFiles.$$"
   for pkg in $(ls "$packageLogs/" 2>/dev/null); do
     [ "$pkg" = "${package%.*}" ] && continue
     grep "^[^:]*/" "$packageLogs/$pkg" 2>/dev/null
@@ -731,7 +735,7 @@ function removePkg() {
 
   # Remove files that are not used by other packages
   echo "Removing files..."
-  local dirList="/tmp/dirList.$$"
+  local dirList="/tmp/.tmpDirList.$$"
   grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -r | while read file; do
     if ! grep -q "^$file$" "$allFiles" 2>/dev/null; then
       if [ -f "${ROOT:-/}$file" ]; then
@@ -1013,7 +1017,7 @@ done
 # Final cleanup ######################################
 function cleanup(){
   unProtect
-  rm -f "$netpkgDir/*.$$"
+  rm -f "$netpkgDir/.tmp*"
   echo -e "Bye ${BOLDRED};)${COLOR_RESET}"
   echo
   exit 0
