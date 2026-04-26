@@ -118,7 +118,7 @@ function getLocalPkgs(){
 
 # fetch the packages list for package named $1
 function getPkgFromshortName(){
-  cut -d " " -f2 $netpkgDir/RemotePkgs.db | sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p"
+  cut -d " " -f2 $netpkgDir/RemotePkgs.db | sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" | head -n1
 }
 
 # The uniq name for pkg
@@ -281,12 +281,12 @@ function getRemoteBlacklist(){
 
 # take a look at local packages list to see which version of the $1 package installed
 function getLocalPkgByshortName(){
-  sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db
+  sed -n "s/^\($1-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db | head -n1
 }
 
 function getLocalPkg(){
   local shortName=${1%-*}; shortName=${shortName%-*}; shortName=${shortName%-*}
-  sed -n "s/^\($shortName-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db
+  sed -n "s/^\($shortName-[^\-]*-[^\-]*-[^\-]*\.t[glx]z\)$/\1/p" $netpkgDir/LocalPkgs.db | head -n1
 }
 
 # Download ($package)
