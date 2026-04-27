@@ -28,6 +28,7 @@ export PATH="/usr/libexec:/sbin:/bin:/usr/sbin:/usr/bin"
 netpkgDir=$(sed -n 's/^[[ \t]*Netpkg_dir[[ \t]*=[[ \t]*\(.*\)$/\1/p' $configFile)
 export netpkgDir="${netpkgDir:=/var/netpkg}"
 mkdir -p $netpkgDir 2>/dev/null
+# rm -f $netpkgDir/.tmp*
 
 remotesDir=$(sed -n 's/^[[ \t]*Remotes_dir[[ \t]*=[[ \t]*\(.*\)$/\1/p' $configFile)
 export remotesDir="${remotesDir:=/etc/netpkg.d}"
@@ -546,6 +547,8 @@ function searchAndPrompt(){
 
     local shortName="$(getShortName $package)"
     local localPkg="$(getLocalPkgByshortName $shortName)"
+    local location="$(getPkgLocation $package)"
+
     [[ -n "$localPkg" ]] && vfilter $package $localPkg ; local status=$?
 
     [[ "${mill[$pos]}" != '' ]] && printf "\e[31m%s\e[0m\b" "${mill[$pos]}" ; ((rotation++)) ; pos=$(( $rotation % 64 ))
@@ -625,7 +628,7 @@ function searchAndPrompt(){
 }
 
 
-# Simplified installPkg function - replaces system installpkg
+# installPkg function - replaces system installpkg
 function installPkg() {
   truncate -s0 $netpkgDir/.tmp*
   local package="$1"
@@ -758,8 +761,14 @@ function removePkg() {
             rm -f "$symlink" 2>/dev/null
           fi
         done
-        # Try to remove directory (only works if empty)
-        rmdir "$dir" 2>/dev/null
+        # Check if directory contains ONLY directories (no files/symlinks)
+        if [ -z "$(find "$dir" ! -type d 2>/dev/null)" ]; then
+          # Safe to remove entire tree - contains only empty dirs
+          rm -rf "$dir" 2>/dev/null
+        else
+          # Contains files - try to remove if empty
+          rmdir "$dir" 2>/dev/null
+        fi
       fi
     done
     rm -f "$dirList"
@@ -1017,7 +1026,7 @@ done
 # Final cleanup ######################################
 function cleanup(){
   unProtect
-  rm -f "$netpkgDir/.tmp*"
+  rm -f $netpkgDir/.tmp*
   echo -e "Bye ${BOLDRED};)${COLOR_RESET}"
   echo
   exit 0
