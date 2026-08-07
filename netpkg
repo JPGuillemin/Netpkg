@@ -272,12 +272,12 @@ function fetchRemotes(){
 
 # get URL for source $1
 function getRemoteURL(){
-  sed -n 's/^[[ \t]*URL[[ \t]*=[[ \t]*\(.*\)$/\1/p' $remotesDir/$1
+  sed -n 's/^[ \t]*URL[ \t]*=[ \t]*\(.*\)$/\1/p' $remotesDir/$1
 }
 
 # get Blacklist for source $1
 function getRemoteBlacklist(){
-    sed -n 's/^[[ \t]*Black_list[[ \t]*=[[ \t]*\(.*\)$/\1/p' $remotesDir/$1
+    sed -n 's/^[ \t]*Black_list[ \t]*=[ \t]*\(.*\)$/\1/p' $remotesDir/$1
 }
 
 # take a look at local packages list to see which version of the $1 package installed
