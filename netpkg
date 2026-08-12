@@ -634,7 +634,7 @@ function installPkg() {
   return 0
 }
 
-# Simplified removePkg function - replaces system removepkg
+# removePkg function - uses system removepkg
 function removePkg() {
   /sbin/removepkg "$1"
   return 0
