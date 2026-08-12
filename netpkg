@@ -628,164 +628,15 @@ function searchAndPrompt(){
 }
 
 
-# installPkg function - replaces system installpkg
+# installPkg function - uses system installpkg
 function installPkg() {
-  truncate -s0 $netpkgDir/.tmp*
-  local package="$1"
-
-  # Determine decompressor
-  case ${package##*.} in
-    'tgz') local decomp='gzip' ;;
-    'tbz') local decomp='bzip2' ;;
-    'tlz') local decomp='lzip' ;;
-    'txz') local decomp='xz' ;;
-    *) echo "ERROR: Unknown package extension $ext"; return 1 ;;
-  esac
-
-  echo "Installing package $package..."
-
-  # Extract package
-  ( cd ${ROOT:-/} ; $decomp -dc | tar -xpf - ) < "$localPkgDir/$package" 2>/dev/null
-  if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to extract $package"
-    return 1
-  fi
-
-  # Record installation in package database
-  if [[ "${package##*.}" == "tgz" ]]; then
-    pkgSize=$( expr `gunzip -l "$localPkgDir/$package" |tail -1|awk '{print $1}'` / 1024 )
-    uncompressedPkgSize=$( expr `gunzip -l "$localPkgDir/$package" |tail -1|awk '{print $2}'` / 1024 )
-  else
-    pkgSize=$( expr `ls -l "$localPkgDir/$package" | awk '{print $5}'` / 1024 )
-    uncompressedPkgSize=$[$pkgSize * 4 ]
-  fi
-  echo "PACKAGE NAME:     ${package%.*}" > "$packageLogs/${package%.*}"
-  echo "PACKAGE LOCATION: $localPkgDir/$package" >> "$packageLogs/${package%.*}"
-  echo "COMPRESSED PACKAGE SIZE:  ${pkgSize}K" >> "$packageLogs/${package%.*}"
-  echo "UNCOMPRESSED PACKAGE SIZE:  ${uncompressedPkgSize}K" >> "$packageLogs/${package%.*}"
-  echo "PACKAGE DESCRIPTION:" >> "$packageLogs/${package%.*}"
-  ( cd ${ROOT:-/} ; $decomp -dc | tar xO install/slack-desc | grep -E '[^[:space:]]*\:'| grep -v '^#' ) < "$localPkgDir/$package" 2>/dev/null >> "$packageLogs/${package%.*}"
-  echo "FILE LIST:" >> "$packageLogs/${package%.*}"
-  ( cd ${ROOT:-/} ; $decomp -dc | tar -tf - ) < "$localPkgDir/$package" 2>/dev/null | sort >> "$packageLogs/${package%.*}"
-
-  # Run install script if present
-  if [ -f "${ROOT:-/}/install/doinst.sh" ]; then
-    echo "Executing install script..."
-    ( cd ${ROOT:-/} ; sh install/doinst.sh 2>/dev/null )
-    rm -rf "${ROOT:-/}/install" 2>/dev/null
-  fi
-
-  # Update library cache
-  if [ -z "$ROOT" ] && [ -x /sbin/ldconfig ]; then
-    /sbin/ldconfig 2>/dev/null
-  fi
-
-  echo "Package $package installed successfully."
-  return 0
-}
-
-# Simplified upgradePkg function - replaces system upgradepkg
-function upgradePkg() {
-  truncate -s0 $netpkgDir/.tmp*
-  local package="$1"
-  local shortName="$(getShortName $package)"
-  local oldPkg="$(getLocalPkgByshortName $shortName)"
-
-  if [ -z "$oldPkg" ]; then
-    installPkg "$package"
-    return $?
-  fi
-
-  # Save old file list for cleanup
-  local oldFiles="$netpkgDir/.tmpOldFiles.$$"
-  grep "^[^:]*/" "$packageLogs/${oldPkg%.*}" 2>/dev/null | sort -u > "$oldFiles"
-
-  # Install new package
-  installPkg "$package" || return 1
-
-  # Save new file list
-  local newFiles="$netpkgDir/.tmpNewFiles.$$"
-  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -u > "$newFiles"
-
-  # Remove old package files (keeping new ones)
-  if [ -f "$oldFiles" ]; then
-    echo "Cleaning up old version files..."
-    comm -23 "$oldFiles" "$newFiles" 2>/dev/null | while read file; do
-      if [ -f "${ROOT:-/}$file" ]; then
-        rm -f "${ROOT:-/}$file" 2>/dev/null
-      fi
-    done
-    rm -f "$packageLogs/${oldPkg%.*}"
-  fi
-
-  # Cleanup temp files
-  rm -f "$oldFiles" "$newFiles"
-
-  echo "Package installed successfully."
+  /sbin/upgradepkg --reinstall --install-new "$1"
   return 0
 }
 
 # Simplified removePkg function - replaces system removepkg
 function removePkg() {
-  truncate -s0 $netpkgDir/.tmp*
-  local package="$1"
-  # Build list of all files from all packages
-  local allFiles="$netpkgDir/.tmpAllFiles.$$"
-  for pkg in $(ls "$packageLogs/" 2>/dev/null); do
-    [ "$pkg" = "${package%.*}" ] && continue
-    grep "^[^:]*/" "$packageLogs/$pkg" 2>/dev/null
-  done | sort -u > "$allFiles"
-
-  # Remove files that are not used by other packages
-  echo "Removing files..."
-  local dirList="/tmp/.tmpDirList.$$"
-  grep "^[^:]*/" "$packageLogs/${package%.*}" 2>/dev/null | sort -r | while read file; do
-    if ! grep -q "^$file$" "$allFiles" 2>/dev/null; then
-      if [ -f "${ROOT:-/}$file" ]; then
-        rm -f "${ROOT:-/}$file" 2>/dev/null
-      elif [ -d "${ROOT:-/}$file" ]; then
-        # Collect directories for later processing
-        echo "${ROOT:-/}$file" >> "$dirList"
-      fi
-    fi
-  done
-
-  # Clean broken symlinks in directories, then remove empty directories
-  if [ -f "$dirList" ]; then
-    echo "Cleaning directories..."
-    sort -u "$dirList" | sort -r | while read dir; do
-      if [ -d "$dir" ]; then
-        # Recursively find and remove broken symlinks
-        find "$dir" -type l 2>/dev/null | while read symlink; do
-          if [ ! -e "$symlink" ]; then
-            rm -f "$symlink" 2>/dev/null
-          fi
-        done
-        # Check if directory contains ONLY directories (no files/symlinks)
-        if [ -z "$(find "$dir" ! -type d 2>/dev/null)" ]; then
-          # Safe to remove entire tree - contains only empty dirs
-          rm -rf "$dir" 2>/dev/null
-        else
-          # Contains files - try to remove if empty
-          rmdir "$dir" 2>/dev/null
-        fi
-      fi
-    done
-    rm -f "$dirList"
-  fi
-
-  # Remove package database entry
-  rm -f "$packageLogs/${package%.*}"
-
-  # Cleanup
-  rm -f "$allFiles"
-
-  # Update library cache
-  if [ -z "$ROOT" ] && [ -x /sbin/ldconfig ]; then
-    /sbin/ldconfig 2>/dev/null
-  fi
-
-  echo "Package $package removed successfully."
+  /sbin/removepkg "$1"
   return 0
 }
 
@@ -912,7 +763,7 @@ if [[ ${#@} -gt 0 ]]; then
 
     echo -ne "${BOLDWHITE}($PkgCount/$PkgNumber) Installing"
     echo -e "${BOLDRED} [$source] $package${COLOR_RESET}"
-    [[ -e $localPkgDir/$package ]] && upgradePkg $package && echo "[${pkgStatus}I] $location/$package $(date)" >> $logFile
+    [[ -e $localPkgDir/$package ]] && installPkg "$localPkgDir/$package" && echo "[${pkgStatus}I] $location/$package $(date)" >> $logFile
 
     # remove package if we don't want to keep it
     if [[ ! "$keepit" = 'yes' ]]; then
