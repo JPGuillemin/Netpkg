@@ -630,13 +630,13 @@ function searchAndPrompt(){
 
 # installPkg function - uses system installpkg
 function installPkg() {
-  /sbin/upgradepkg --reinstall --install-new "$1"
+  /sbin/upgradepkg --reinstall --install-new "$1" 1>/dev/null 2>/dev/null
   return 0
 }
 
 # removePkg function - uses system removepkg
 function removePkg() {
-  /sbin/removepkg "$1"
+  /sbin/removepkg "$1" 1>/dev/null 2>/dev/null
   return 0
 }
 
